@@ -12,7 +12,7 @@ export function debounce(fn, delay) {
     }, delay)
   }
 }
-//时间戳转换为时间格式字符串
+//年月日时间戳转换为时间格式字符串
 export function formatDate(date, fmt) {
   if (/(y+)/.test(fmt)) {
     fmt = fmt.replace(RegExp.$1, (date.getFullYear() + '').substr(4 - RegExp.$1.length));
@@ -36,12 +36,10 @@ export function formatDate(date, fmt) {
 function padLeftZero(str) {
   return ('00' + str).substr(str.length);
 };
-
+//转换秒为单位的时间
 export function timeFormat(time) {
   // console.log(time);
-  // let timee = parseInt(time / 1000);
-  let timee = parseInt(time);
-  // console.log(timee);
+  let timee = parseInt(time / 1000);
   //分钟
   var minute = timee / 60;
   var minutes = parseInt(minute);
@@ -59,6 +57,7 @@ export function timeFormat(time) {
   }
   return `${minutes}:${seconds}`;
 }
+// 转换微秒为单位的时间
 export function songTimeFormat(time) {
   //分钟
   var minute = time / 60;
@@ -75,13 +74,4 @@ export function songTimeFormat(time) {
     seconds = "0" + seconds;
   }
   return `${minutes}:${seconds}`;
-}
-
-export function getSongListInfoSongs(songsid) {
-  return request({
-    url: "song/detail",
-    params: {
-      ids: songsid,
-    },
-  });
 }

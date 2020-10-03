@@ -43,13 +43,23 @@ const routes = [{
     }, {
       path: 'find',
       component: find,
+      meta: {
+
+        keepAlive: false //true是保存缓存，false是不保存
+
+      },
       children: [{
         path: '/',
         redirect: 'geXing'
       }, {
         path: 'geXing',
         name: 'gexing',
-        component: geXing
+        component: geXing,
+        meta: {
+
+          keepAlive: false //true是保存缓存，false是不保存
+
+        }
       }, {
         path: 'bestNew',
         name: 'bestNew',
@@ -83,9 +93,9 @@ const routes = [{
     }, {
       path: 'myRadio',
       component: MyRadio
-      }, {
-        path: 'listDetail:id',
-        component:listDetail
+    }, {
+      path: 'listDetail:id',
+      component: listDetail
     }]
   },
 

@@ -1,7 +1,21 @@
 <template>
-  <el-table :data="tableData" style="width: 100%" class="" stripe>
+  <el-table
+    :data="tableData"
+    style="width: 100%"
+    @row-click="playMusicList"
+    stripe
+  >
     <el-table-column type="index" label=" " width="50px"> </el-table-column>
-    <el-table-column prop="caoZuo" label="操作" width="60px"> </el-table-column>
+    <el-table-column label="操作" width="60px">
+      <template>
+        <div class="caoZuoBtn">
+          <img src="~assets/images/geXing/心.png" alt="喜欢" /><img
+            src="~assets/images/geXing/下载.png"
+            alt="下载"
+          />
+        </div>
+      </template>
+    </el-table-column>
     <el-table-column prop="name" label="音乐标题" width="333px">
     </el-table-column>
     <el-table-column prop="ar[0].name" label="歌手" width="236px">
@@ -13,13 +27,22 @@
 </template>
 
 <script>
-import { timeFormat, getSongListInfoSongs } from "common/tool";
+import { timeFormat } from "common/tool";
+import {
+  getListDetail,
+  getSongListInfoSongs,
+  getMusicUrl,
+} from "network/children/geXing";
+
+import {} from "network/request";
 export default {
   data() {
     return {
       tableData: [],
-      //
       musicIds: [],
+      playlist: {},
+      creators: {},
+      count: 0,
     };
   },
   created() {
@@ -27,38 +50,27 @@ export default {
   },
   methods: {
     //获取列表
-    async getMusicList() {
+    getMusicList() {
+      if (this.tableData) this.tableData = [];
+      if (this.musicIds) this.musicIds = [];
       const id = this.$route.params.id;
-      const res = await this.$http.post("playlist/detail", { id: id });
-      res.data.playlist.trackIds.forEach((item1) => {
-        this.musicIds.push(item1.id);
-      });
-      // const res1 = await this.$http.post("song/detail", { ids: "5102638245" });
-      this.musicIds.map((item2) => {
-        // item2 += "";
-        // console.log(item2);
-        // const res1 = await this.$http.post("song/detail", { ids: item2 });
-        // console.log(res1);
-        // res1.data.songs[0].dt = timeFormat(res1.data.songs[0].dt);
-        // this.tableData.push(res1.data.songs[0]);
-        //
-        this.getSongDetail(item2);
+      getListDetail(id).then((res) => {
+        this.playlist = res.playlist;
+        this.creators = res.playlist.creator;
+        //获取列表前20条数据
+        for (let i in this.playlist.trackIds) {
+          if (i < 20) {
+            this.musicIds.push(this.playlist.trackIds[i].id);
+          }
+        }
+        //获取列表前20条数据每条的信息
+        this.musicIds.map((item2) => {
+          this.getSongDetail(item2);
+        });
       });
     },
     //获取每首歌时长名字歌手
     getSongDetail(item) {
-      // console.log(item);
-      // item += "";
-      // const res = await this.$http
-      //   .post("song/detail", { ids: item })
-      //   .then((res) => {
-      //     console.log(res);
-      //   })
-      //   .catch((err) => {});
-      // console.log(err);
-
-      // res.data.songs[0].dt = timeFormat(res.data.songs[0].dt);
-      // this.tableData.push(res.data.songs[0]);
       getSongListInfoSongs(item).then((res) => {
         item += "";
         res.songs[0].dt = timeFormat(res.songs[0].dt);
@@ -66,8 +78,30 @@ export default {
         this.tableData.push(res.songs[0]);
       });
     },
+    //点击某音乐之后播放
+    async playMusicList(e) {
+      console.log(e);
+      this.$store.commit("playMusicList", e);
+      //获取url上传到vuex
+      // const musicAudio = document.getElementById("musicAudio");
+      // const res = await this.$http.post("song/url", { id: e.id });
+      this.$store.commit("setMusicUrl");
+      getMusicUrl(e.id).then((res) => {
+        this.$store.commit("setMusicUrl", res.data[0].url);
+      });
+    },
   },
   mounted() {},
+  watch: {
+    $route: function (to, from) {
+      if (!this.tableData) {
+        this.getMusicList();
+      } else {
+        this.tableData = [];
+        this.getMusicList();
+      }
+    },
+  },
 };
 </script>
 
@@ -102,8 +136,29 @@ th {
 th.is-leaf {
   border: 0;
 }
-
+.el-table /deep/ .el-table__row {
+  cursor: pointer;
+}
 tr /deep/ el-table__row:hover {
   color: #000;
+}
+
+.caoZuoBtn {
+  width: 100%;
+  height: 20px;
+  img {
+    cursor: pointer;
+    position: relative;
+    top: 3px;
+    width: 16px;
+    height: 16px;
+    margin-left: 4px;
+  }
+  :nth-child(2) {
+    top: 1px;
+  }
+  :nth-child(1) {
+    left: -2px;
+  }
 }
 </style>

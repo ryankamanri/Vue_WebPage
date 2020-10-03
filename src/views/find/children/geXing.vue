@@ -10,7 +10,7 @@
     </div>
     <div class="mainBox">
       <!-- 每日推荐 -->
-      <ul class="bigBox">
+      <!-- <ul class="bigBox">
         <li class="eachBox">
           <div class="picBox">
             <img src="~assets/images/touxiang.jpg" alt="" />
@@ -20,7 +20,7 @@
             <p>最好的祝福送给最好的你！</p>
           </div>
         </li>
-      </ul>
+      </ul> -->
       <ul class="bigBox" v-for="(item, index) in musicList" :key="index">
         <li class="eachBox" @click="eachClick(item.id)">
           <div class="picBox"><img :src="item.coverImgUrl" alt="" /></div>
@@ -120,8 +120,7 @@ export default {
       //生成随机数
       const num = (Math.random() * 100).toFixed(0);
       //获取随机歌曲
-      const res = await this.$http.post(`top/playlist?offset=${num}&limit=9`);
-      console.log(res);
+      const res = await this.$http.post(`top/playlist?offset=${num}&limit=10`);
       //赋值给歌单
       this.musicList = res.data.playlists;
 

@@ -4,7 +4,9 @@
       <div class="topBar">
         <tap-bar />
       </div>
+      <!-- <keep-alive exclude="bestNew,geXing,paiHang,singer,songList,zhuBo"> -->
       <router-view></router-view>
+      <!-- </keep-alive> -->
     </div>
   </div>
 </template>

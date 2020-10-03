@@ -57,12 +57,25 @@
             <span slot="title">朋友</span>
           </el-menu-item>
         </el-menu>
+        <div class="yuLan">
+          <div class="yuLanLi">
+            <div class="imgBox">
+              <img :src="musicInfo.al.picUrl" alt="" />
+            </div>
+            <div class="textBox">
+              <h5>{{ musicInfo.name }}</h5>
+              <h5>正在播放:</h5>
+            </div>
+          </div>
+        </div>
       </el-col>
     </el-row>
   </el-container>
 </template>
 
 <script>
+// import { getNowMusic } from "store/index";
+import { mapGetters } from "vuex";
 export default {
   name: "leftMenu",
   data() {
@@ -70,12 +83,41 @@ export default {
       //当前活跃的路径
       activePath: "",
       isCollapse: false,
+      //音乐信息
+      musicInfo: {
+        name: "网易云音乐",
+        al: {
+          picUrl:
+            "https://p2.music.126.net/NhkuFBphLFaSmYMeW1-frQ==/109951164271814514.jpg",
+        },
+      },
+      pinUrl: "",
     };
   },
   created() {
+    //获取菜单路径
     this.activePath = window.sessionStorage.getItem("activePath");
+    //获取音乐信息
+    // this.getMusicInfo();
+  },
+  computed: {
+    ...mapGetters(["getNowMusic"]),
+    ifImgUndefined() {
+      this.pinUrl =
+        musicInfo.al.picUrl === undefined
+          ? "https://p2.music.126.net/NhkuFBphLFaSmYMeW1-frQ==/109951164271814514.jpg"
+          : this.musicInfo.al.picUrl;
+      // console.log(this.musicInfo.name);
+    },
   },
   methods: {
+    //获取当前音乐信息
+    // getMusicInfo() {
+    //   console.log(this.musicInfo.name);
+    //   this.musicInfo = this.$store.state.musicInfo;
+    //   console.log(this.musicInfo);
+    // },
+
     handleOpen() {
       console.log("hehe");
     },
@@ -89,10 +131,19 @@ export default {
       this.activePath = activePath;
     },
   },
+
+  ifNameUndefined() {
+    return this.musicInfo.name === undefined ? "11" : "222";
+  },
+  watch: {
+    getNowMusic(info) {
+      this.musicInfo = info;
+    },
+  },
 };
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 .tuiJian {
   font-size: 13px;
   margin: 8px;
@@ -110,5 +161,45 @@ export default {
 .el-menu-item {
   height: 40px;
   line-height: 40px;
+}
+.yuLan {
+  width: 200px;
+  height: 55px;
+  position: absolute;
+  top: 794px;
+  border-top: 1px solid var(--color-line);
+  .yuLanLi {
+    width: 90%;
+    height: 90%;
+    margin: 2%;
+  }
+  .imgBox {
+    float: left;
+    width: 45px;
+    height: 45px;
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+  .textBox {
+    float: left;
+    margin-left: 10px;
+    margin-bottom: 5px;
+    height: 45px;
+    width: 100px;
+    :nth-child(1) {
+      width: 140px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    h5 {
+      margin-top: 4px;
+      font-weight: 400;
+      color: #444;
+      font-size: 13px;
+    }
+  }
 }
 </style>

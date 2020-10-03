@@ -33,7 +33,7 @@
       <el-slider
         v-model="voiceAdjust"
         :max="maxVoice"
-        @change="voiceChange"
+        @input="voiceChange"
       ></el-slider>
       <img src="~assets/audio/声音.png" alt="" />
     </div>
@@ -45,20 +45,27 @@
       <div class="geCi"><span>词</span></div>
       <div class="lieBiao"><img src="~assets/audio/列表.png" alt="" /></div>
     </div>
+    <!-- 歌曲 -->
     <audio
-      src="~assets/audio/欢喜.mp3"
+      :src="this.musicUrl"
       class="playMusicAudio"
       ref="audioRef"
+      autoplay
+      id="musicAudio"
     ></audio>
   </div>
 </template>
 
 <script>
-import { timeFormat } from "common/tool";
+import { mapGetters } from "vuex";
+import { songTimeFormat } from "common/tool";
+// import { getNowMusic, getMusicListIds } from "store/getters";
+import { clearMusicList } from "store/index";
 export default {
   data() {
     return {
       // getNowMusic: null,
+
       //是否显示暂停
       ifAudio: false,
       //当前进度
@@ -68,8 +75,12 @@ export default {
       //是否禁用
       isUrl: false,
       //音量调节
-      voiceAdjust: 100,
+      voiceAdjust: 50,
       maxVoice: 100,
+      //音乐信息
+      musicInfo: {},
+      //音乐url
+      musicUrl: "",
     };
   },
   created() {},
@@ -77,10 +88,24 @@ export default {
     //初始化音乐
     this.installMusic();
   },
+  computed: {
+    //音乐改变
+    musicChange() {
+      return this.$store.state.musicInfo;
+    },
+    ...mapGetters([
+      "getNowMusic",
+      "getMusicUrl",
+      "getNowMusic",
+      "getMusicListIds",
+    ]),
+  },
   //改变进度触发事件
   methods: {
     //初始化音乐
     installMusic() {
+      //获取音乐信息
+      this.musicInfo = this.$store.state.musicInfo;
       const audio = this.$refs.audioRef;
       //初始化进度条时间
       audio.currentTime = this.musicDuration;
@@ -115,11 +140,51 @@ export default {
     voiceChange(e) {
       this.$refs.audioRef.volume = e / 100;
     },
+    //得到音乐url
+    // getMusicUrl() {
+    // const Id = this.$store.state.musicInfo.id;
+    // const res = await this.$http.post("song/url", { id: Id });
+    // console.log(res);
+    // this.$store.commit("getNowMusic", res.data.data[0].url);
+    // const res1 = await this.$http.post("song/detail", { ids: Id });
+    // this.$store.commit("getNowMusicMenu", res.songs[0]);
+    // console.log(this.$store.state.nowMusic);
+    // },
   },
   filters: {
     filtersTime(time) {
-      return timeFormat(time);
+      return songTimeFormat(time);
     },
+  },
+  watch: {
+    //监听得到url
+    getMusicUrl: function (url) {
+      console.log("我wach到了");
+      this.musicUrl = url;
+      this.ifAudio = true;
+    },
+    //监听改变url
+    getNowMusic: function () {
+      console.log("getNowMusic");
+      this.musicUrl = this.$store.state.musicurl;
+    },
+    // getNowMusic: function (info) {
+    //   this.ifAudio = false;
+    //   this.$store.commit("clearNowMusic");
+    //   console.log("hehe,清除完了");
+    //   this.getMusicUrl();
+    //   this.ifAudio = true;
+    // },
+    // getMusicListIds() {
+    //列表清零
+    //   this.$store.commit("clearMusicList");
+    //   this.getMusicUrl();
+    // },
+
+    // musicChange(newVal, oldVal) {
+    //   console.log(newVal);
+    //   console.log(oldVal);
+    // },
   },
 };
 </script>

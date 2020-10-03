@@ -14,24 +14,6 @@ import axios from 'axios'
 // axios.defaults.baseURL = 'http://localhost:3000/'
 axios.defaults.baseURL = '/api'
 Vue.prototype.$http = axios
-/* axios.interceptors.response.use(res => {
-  console.log(res.data)
-}) */
-//配置路由
-export function request(config) {
-  const conf1 = axios.create({
-    baseURL: '/api',
-    timeout: 20000
-  })
-  conf1.interceptors.request.use((config) => {
-    return config
-  }, err => console.log(err))
-  conf1.interceptors.response.use((res) => {
-    console.log(res);
-    return res.data
-  })
-  return conf1(config)
-}
 
 Vue.config.productionTip = false
 

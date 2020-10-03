@@ -8,12 +8,12 @@
         <div class="desc">
           <div class="title">
             <span>歌单</span>
-            <h3>[华语速爆新歌] 最新华语音乐推荐</h3>
+            <h3>{{ musicList.name }}</h3>
           </div>
           <div class="logoTime">
-            <img src="~assets/images/touxiang.jpg" alt="" />
-            <a class="d" href="#">网易云音乐</a>
-            <span class="d">2020-2-2创建</span>
+            <img :src="musicList.creator.avatarUrl" alt="未找到" />
+            <a class="d" href="#">{{ musicList.creator.nickname }}</a>
+            <span class="d">{{ musicList.createTime | showData }}创建</span>
             <div class="start">
               <img src="~assets/images/geXing/星星.png" alt="" />
             </div>
@@ -22,20 +22,29 @@
             <div class="playAll d">
               <i class="el-icon-video-play" />播放全部<i class="el-icon-plus" />
             </div>
-            <div class="shouCang d">收藏(99999)</div>
-            <div class="share d">分享(19999)</div>
+            <div class="shouCang d">收藏({{ musicList.subscribedCount }})</div>
+            <div class="share d">分享({{ musicList.shareCount }})</div>
             <div class="downAll d">下载全部</div>
           </div>
           <div class="bottomText">
-            <span>标签:<a>华语</a></span>
+            <span
+              >标签:
+              <a
+                href="#"
+                v-for="(item, index) in musicList.tags"
+                :key="index"
+                >{{
+                  index + 1 === musicList.tags.length ? item : item + " / "
+                }}</a
+              ></span
+            >
             <div>
-              优质华语新歌，网易云音乐每周二精选推荐。<br />
-              本周封面：吴宣仪
+              {{ (musicList.description + "").substr(0, 200) + "..." }}
             </div>
           </div>
           <div class="count">
-            <div>歌曲数</div>
-            <div>播放数</div>
+            <div>歌曲数{{ musicList.trackCount }}</div>
+            <div>播放数{{ (musicList.playCount / 10000).toFixed(0) }}</div>
           </div>
         </div>
       </div>
@@ -63,9 +72,14 @@
 import songLists from "components/find/listDetail/songLists";
 import shouCang from "components/find/listDetail/shouCang";
 import critic from "components/find/listDetail/critic";
+import { getListDetail } from "network/children/geXing";
+
+import { formatDate } from "common/tool";
 export default {
   data() {
     return {
+      //id
+      id: 0,
       //顶部资料
       musicList: {},
       activeName: "first",
@@ -73,21 +87,45 @@ export default {
   },
   components: { songLists, shouCang, critic },
   created() {
-    //获取列表
     this.getMusicList();
+    //获取列表
+    // var id = this.$route.params.id;
+    // this.getMusicList(id);
+  },
+  mounted() {
+    // this.getMusicList();
   },
   methods: {
     //获取列表
-    async getMusicList() {
-      var id = this.$route.params.id;
-      console.log(id);
-      const res = await this.$http.post("playlist/detail", { id: id });
-      this.musicList = res.data.playlist;
-      console.log(res);
+    getMusicList() {
+      // this.musicList = null;
+      const id = this.$route.params.id;
+      if (id === undefined) {
+        return console.log("hehe");
+      }
+      getListDetail(id)
+        .then((res) => {
+          if (res !== undefined) {
+            this.musicList = res.playlist;
+          }
+        })
+        .catch((err) => console.log(err));
     },
     //切换栏
     handleClick(vel) {
       console.log(vel);
+    },
+  },
+  watch: {
+    //监听路由变化
+    $route: function (to, from) {
+      return this.getMusicList();
+    },
+  },
+  filters: {
+    showData: function (value) {
+      let date = new Date(value);
+      return formatDate(date, "yyyy-MM-dd");
     },
   },
 };
@@ -181,8 +219,10 @@ export default {
   // text-align: center;
   line-height: 32px;
   img {
-    height: 29px;
-    width: 29px;
+    position: relative;
+    bottom: 4px;
+    height: 34px;
+    width: 34px;
     border-radius: 50%;
     vertical-align: middle;
   }
@@ -201,8 +241,8 @@ export default {
 }
 .start {
   position: absolute;
-  top: 23px;
-  left: 20px;
+  top: 21px;
+  left: 23px;
   width: 10px;
   height: 10px;
   background-color: #ffbd20;
@@ -221,6 +261,7 @@ export default {
   width: 120px;
   height: 25px;
   background-color: #c62f2f;
+  cursor: pointer;
   color: #fff;
   border-radius: 5px;
   font-size: 14px;
@@ -245,5 +286,17 @@ export default {
   position: absolute;
   top: 0;
   right: 0;
+  font-size: 13px;
+  color: #444;
+}
+.shouCang,
+.share,
+.downAll {
+  padding: 4px 5px;
+  border: 1px solid var(--color-line);
+  margin-left: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 13px;
 }
 </style>
