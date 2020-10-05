@@ -18,8 +18,6 @@ export default {
   components: {
     tapBar,
   },
-  // <keep-alive exclude="bestNew,geXing,paiHang,singer,songList,zhuBo">
-  //
 };
 </script>
 

@@ -1,13 +1,13 @@
 <template>
   <!-- 主体 -->
-  <el-container class="w">
+  <el-container>
     <el-row class="tac">
-      <el-col :span="100">
+      <el-col>
         <h3 class="tuiJian">推荐</h3>
         <el-menu
           :default-active="activePath"
           background-color="#f5f5f7"
-          text-color="--color-text"
+          text-color="#5c5c5c"
           active-text-color="#000000"
           :unique-opened="true"
           :collapse="isCollapse"
@@ -17,8 +17,8 @@
         >
           <el-menu-item
             index="/home/find/geXing"
-            @click="SaveNevState('/home/find')"
-            :class="activePath == '/home/find' ? 'activeBg' : ''"
+            @click="SaveNevState('/home/find/geXing')"
+            :class="activePath === '/home/find/geXing' ? 'activeBg' : ''"
           >
             <i class="el-icon-s-opportunity"></i>
             <span slot="title">发现音乐</span>
@@ -27,17 +27,17 @@
           <el-menu-item
             index="/home/myRadio"
             @click="SaveNevState('/home/myRadio')"
-            :class="activePath == '/home/myRadio' ? 'activeBg' : ''"
+            :class="activePath === '/home/myRadio' ? 'activeBg' : ''"
           >
-            <i class="el-icon-mic" style="color: #000"></i>
+            <i class="el-icon-mic"></i>
             <span slot="title">私人FM</span>
           </el-menu-item>
           <el-menu-item
             index="/home/live"
             @click="SaveNevState('/home/live')"
-            :class="activePath == '/home/live' ? 'activeBg' : ''"
+            :class="activePath === '/home/live' ? 'activeBg' : ''"
           >
-            <i class="el-icon-headset" style="color: #000"></i>
+            <i class="el-icon-headset"></i>
             <span slot="title">LOOK直播</span>
           </el-menu-item>
           <el-menu-item
@@ -45,7 +45,7 @@
             @click="SaveNevState('/home/video')"
             :class="activePath == '/home/video' ? 'activeBg' : ''"
           >
-            <i class="el-icon-video-camera" style="color: #000"></i>
+            <i class="el-icon-video-camera"></i>
             <span slot="title">视频</span>
           </el-menu-item>
           <el-menu-item
@@ -53,7 +53,7 @@
             @click="SaveNevState('/home/friends')"
             :class="activePath == '/home/friends' ? 'activeBg' : ''"
           >
-            <i class="el-icon-user" style="color: #000"></i>
+            <i class="el-icon-user"></i>
             <span slot="title">朋友</span>
           </el-menu-item>
         </el-menu>
@@ -69,7 +69,115 @@
           </div>
         </div>
       </el-col>
+      <el-col>
+        <h3 class="tuiJian">我的音乐</h3>
+        <el-menu
+          :default-active="activePath"
+          background-color="#f5f5f7"
+          text-color="#5c5c5c"
+          active-text-color="#000000"
+          :unique-opened="true"
+          :collapse="isCollapse"
+          :collapse-transition="false"
+          router
+          class="leftMenuWith"
+        >
+          <el-menu-item
+            index="/home/localMusic"
+            @click="SaveNevState('/home/localMusic')"
+            :class="activePath == '/home/localMusic' ? 'activeBg' : ''"
+          >
+            <i class="el-icon-bangzhu"></i>
+            <span slot="title">本地音乐</span>
+          </el-menu-item>
+
+          <el-menu-item
+            index="/home/download"
+            @click="SaveNevState('/home/download')"
+            :class="activePath == '/home/download' ? 'activeBg' : ''"
+          >
+            <i class="el-icon-download"></i>
+            <span slot="title">下载管理</span>
+          </el-menu-item>
+          <el-menu-item
+            index="/home/cloudPan"
+            @click="SaveNevState('/home/cloudPan')"
+            :class="activePath == '/home/cloudPan' ? 'activeBg' : ''"
+          >
+            <i class="el-icon-cloudy"></i>
+            <span slot="title">我的音乐云盘</span>
+          </el-menu-item>
+          <el-menu-item
+            index="/home/dianTai"
+            @click="SaveNevState('/home/dianTai')"
+            :class="activePath == '/home/dianTai' ? 'activeBg' : ''"
+          >
+            <i class="el-icon-coin"></i>
+            <span slot="title">我的电台</span>
+          </el-menu-item>
+          <el-menu-item
+            index="/home/shouCang"
+            @click="SaveNevState('/home/shouCang')"
+            :class="activePath == '/home/shouCang' ? 'activeBg' : ''"
+          >
+            <i class="el-icon-star-off"></i>
+            <span slot="title">我的收藏</span>
+          </el-menu-item>
+        </el-menu>
+        <div class="yuLan">
+          <div class="yuLanLi">
+            <div class="imgBox">
+              <img :src="musicInfo.al.picUrl" alt="" />
+            </div>
+            <div class="textBox">
+              <h5>{{ musicInfo.name }}</h5>
+              <h5>正在播放:</h5>
+            </div>
+          </div>
+        </div>
+      </el-col>
+      <el-col>
+        <el-menu
+          :default-active="activePath"
+          background-color="#f5f5f7"
+          text-color="#5c5c5c"
+          active-text-color="#000000"
+          :unique-opened="true"
+          :collapse="isCollapse"
+          :collapse-transition="false"
+          router
+          class="leftMenuWith"
+        >
+          <el-submenu index="1">
+            <template slot="title">
+              <span class="myMusicList">创建的歌单</span>
+            </template>
+
+            <el-menu-item
+              :index="'/home/listDetail' + item.id"
+              v-for="(item, index) in likeMusic"
+              :key="index"
+              @click="SaveNevState('/home/listDetail' + item.id)"
+              :class="
+                activePath == '/home/listDetail' + item.id ? 'activeBg' : ''
+              "
+            >
+              <i class="el-icon-star-off"></i>
+              <span slot="title">{{ item.name }}</span>
+            </el-menu-item>
+            <el-menu-item
+              index="/home/cloudPan"
+              @click="SaveNevState('/home/cloudPan')"
+              :class="activePath == '/home/cloudPan' ? 'activeBg' : ''"
+            >
+              <i class="el-icon-cloudy"></i>
+              <span slot="title">我的音乐云盘</span>
+            </el-menu-item>
+          </el-submenu>
+        </el-menu>
+      </el-col>
     </el-row>
+    <el-row class="tac"> </el-row>
   </el-container>
 </template>
 
@@ -92,10 +200,16 @@ export default {
         },
       },
       pinUrl: "",
+      //个人信息
+      personInfo: {},
+      //喜欢的音乐
+      likeMusic: [],
     };
   },
   created() {
     //获取菜单路径
+    this.getMenu();
+    //获取活跃路径
     this.activePath = window.sessionStorage.getItem("activePath");
     //获取音乐信息
     // this.getMusicInfo();
@@ -111,13 +225,16 @@ export default {
     },
   },
   methods: {
-    //获取当前音乐信息
-    // getMusicInfo() {
-    //   console.log(this.musicInfo.name);
-    //   this.musicInfo = this.$store.state.musicInfo;
-    //   console.log(this.musicInfo);
-    // },
-
+    //获取左侧菜单
+    async getMenu() {
+      this.personInfo = JSON.parse(window.localStorage.getItem("getP"));
+      console.log(this.personInfo);
+      const res = await this.$http.post("user/playlist", {
+        uid: this.personInfo.userId,
+      });
+      console.log(res);
+      this.likeMusic = res.data.playlist;
+    },
     handleOpen() {
       console.log("hehe");
     },
@@ -129,6 +246,13 @@ export default {
       this.activePath = "";
       window.sessionStorage.setItem("activePath", activePath);
       this.activePath = activePath;
+    },
+    //菜单的打开与关闭
+    handleOpen(key, keyPath) {
+      console.log(key, keyPath);
+    },
+    handleClose(key, keyPath) {
+      console.log(key, keyPath);
     },
   },
 
@@ -158,9 +282,25 @@ export default {
   border-left: 2px solid #c62f2f;
   color: #000;
 }
-.el-menu-item {
-  height: 40px;
-  line-height: 40px;
+.el-menu /deep/ .el-menu-item {
+  height: 33px;
+  line-height: 33px;
+  font-family: serif;
+  font-size: 13px;
+  color: #ccc;
+  padding-left: 20px;
+}
+
+.el-menu /deep/ .el-menu-item span {
+  display: inline-block;
+  width: 141px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.el-submenu /deep/ .el-menu-item {
+  padding-left: 20px !important;
 }
 .yuLan {
   width: 200px;
@@ -201,5 +341,17 @@ export default {
       font-size: 13px;
     }
   }
+}
+
+.el-submenu /deep/ .el-submenu__title {
+  width: 200px;
+  height: 40px;
+  font-size: 15px;
+  // background-color: #f5f5f7;
+}
+.myMusicList {
+  position: relative;
+  right: 10px;
+  bottom: 10px;
 }
 </style>

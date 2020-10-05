@@ -18,7 +18,7 @@
               <img src="~assets/images/geXing/星星.png" alt="" />
             </div>
           </div>
-          <div class="btnList">
+          <div class="btnList" @click="playAll()">
             <div class="playAll d">
               <i class="el-icon-video-play" />播放全部<i class="el-icon-plus" />
             </div>
@@ -53,7 +53,7 @@
       <template>
         <el-tabs v-model="activeName" @tab-click="handleClick">
           <el-tab-pane label="歌曲列表" name="first"
-            ><song-lists></song-lists
+            ><song-lists ref="songListsRef"></song-lists
           ></el-tab-pane>
           <el-tab-pane label="评论(999)" name="second"
             ><critic></critic
@@ -81,16 +81,13 @@ export default {
       //id
       id: 0,
       //顶部资料
-      musicList: {},
+      musicList: { creator: { avatarUrl: "www.baidu.com" } },
       activeName: "first",
     };
   },
   components: { songLists, shouCang, critic },
   created() {
     this.getMusicList();
-    //获取列表
-    // var id = this.$route.params.id;
-    // this.getMusicList(id);
   },
   mounted() {
     // this.getMusicList();
@@ -98,22 +95,23 @@ export default {
   methods: {
     //获取列表
     getMusicList() {
-      // this.musicList = null;
       const id = this.$route.params.id;
-      if (id === undefined) {
-        return console.log("hehe");
-      }
+      if (!id) return;
       getListDetail(id)
         .then((res) => {
-          if (res !== undefined) {
-            this.musicList = res.playlist;
-          }
+          this.musicList = res.playlist;
         })
         .catch((err) => console.log(err));
     },
     //切换栏
     handleClick(vel) {
       console.log(vel);
+    },
+    //将全部歌曲添加到列表
+    playAll() {
+      //通过refs的形式将子组件传入父组件
+      console.log(this.$refs.songListsRef.tableData);
+      this.$store.commit("getNowMusicMenu", this.$refs.songListsRef.tableData);
     },
   },
   watch: {
@@ -206,6 +204,8 @@ export default {
     margin-right: 14px;
   }
   h3 {
+    position: relative;
+    top: 4px;
     display: inline-block;
     font-size: 20px;
     font-weight: 400;

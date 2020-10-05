@@ -5,12 +5,21 @@ const Home = () => import("views/Home")
 
 //登录页面路由 
 const Login = () => import("views/Login")
-//左侧菜单一级路由
+//左侧菜单一级路由---推荐
 const find = () => import("views/find/index")
 const MyRadio = () => import("views/MyRadio")
 const Live = () => import("views/Live")
 const Video = () => import("views/Video")
 const Friends = () => import("views/Friends")
+//左侧菜单一级路由---我的音乐
+const cloudPan = () => import("views/myMusic/cloudPan")
+const dianTai = () => import("views/myMusic/dianTai")
+const download = () => import("views/myMusic/download")
+const localMusic = () => import("views/myMusic/localMusic")
+const shouCang = () => import("views/myMusic/shouCang")
+//左侧菜单一级路由---创建的歌单
+// const likeMusic = () => import("viewx/foundList/likeMusic")
+
 //右侧find的二级路由
 listDetail
 const listDetail = () => import("views/find/listDetail")
@@ -96,6 +105,21 @@ const routes = [{
     }, {
       path: 'listDetail:id',
       component: listDetail
+    }, {
+      path: 'cloudPan',
+      component: cloudPan
+    }, {
+      path: 'dianTai',
+      component: dianTai
+    }, {
+      path: 'download',
+      component: download
+    }, {
+      path: 'localMusic',
+      component: localMusic
+    }, {
+      path: 'shouCang',
+      component: shouCang
     }]
   },
 

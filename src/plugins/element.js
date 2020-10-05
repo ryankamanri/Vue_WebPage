@@ -24,7 +24,9 @@ import {
   Slider,
   Avatar,
   Popover,
-  Progress
+  Progress,
+  MenuItemGroup,
+  Dialog
 } from 'element-ui'
 
 Vue.use(Input)
@@ -51,5 +53,7 @@ Vue.use(Slider)
 Vue.use(Avatar)
 Vue.use(Popover)
 Vue.use(Progress)
+Vue.use(MenuItemGroup)
+Vue.use(Dialog)
 
 Vue.prototype.$message = Message

@@ -4,6 +4,7 @@
     style="width: 100%"
     @row-click="playMusicList"
     stripe
+    :row-class-name="tableRowClassName"
   >
     <el-table-column type="index" label=" " width="50px"> </el-table-column>
     <el-table-column label="操作" width="60px">
@@ -47,6 +48,7 @@ export default {
   },
   created() {
     this.getMusicList();
+    console.log("hehe");
   },
   methods: {
     //获取列表
@@ -54,41 +56,50 @@ export default {
       if (this.tableData) this.tableData = [];
       if (this.musicIds) this.musicIds = [];
       const id = this.$route.params.id;
-      getListDetail(id).then((res) => {
-        this.playlist = res.playlist;
-        this.creators = res.playlist.creator;
-        //获取列表前20条数据
-        for (let i in this.playlist.trackIds) {
-          if (i < 20) {
-            this.musicIds.push(this.playlist.trackIds[i].id);
+      if (!id) return;
+      getListDetail(id)
+        .then((res) => {
+          this.playlist = res.playlist;
+          this.creators = res.playlist.creator;
+          //获取列表前20条数据
+          for (let i in this.playlist.trackIds) {
+            if (i < 20) {
+              this.musicIds.push(this.playlist.trackIds[i].id);
+            }
           }
-        }
-        //获取列表前20条数据每条的信息
-        this.musicIds.map((item2) => {
-          this.getSongDetail(item2);
-        });
-      });
+          //获取列表前20条数据每条的信息
+          this.musicIds.map((item2) => {
+            this.getSongDetail(item2);
+          });
+        })
+        .catch((err) => console.log(err));
     },
     //获取每首歌时长名字歌手
     getSongDetail(item) {
-      getSongListInfoSongs(item).then((res) => {
-        item += "";
-        res.songs[0].dt = timeFormat(res.songs[0].dt);
-        //每首歌的信息保存
-        this.tableData.push(res.songs[0]);
-      });
+      getSongListInfoSongs(item)
+        .then((res) => {
+          item += "";
+          res.songs[0].dt = timeFormat(res.songs[0].dt);
+          //每首歌的信息保存
+          this.tableData.push(res.songs[0]);
+        })
+        .catch((err) => console.log(err));
     },
     //点击某音乐之后播放
-    async playMusicList(e) {
+    playMusicList(e) {
       console.log(e);
       this.$store.commit("playMusicList", e);
-      //获取url上传到vuex
-      // const musicAudio = document.getElementById("musicAudio");
-      // const res = await this.$http.post("song/url", { id: e.id });
+
       this.$store.commit("setMusicUrl");
-      getMusicUrl(e.id).then((res) => {
-        this.$store.commit("setMusicUrl", res.data[0].url);
-      });
+      getMusicUrl(e.id)
+        .then((res) => {
+          this.$store.commit("setMusicUrl", res.data[0].url);
+        })
+        .catch((err) => console.log(err));
+    },
+    //每一条数据
+    tableRowClassName({ row, rowIndex }) {
+      row.index = rowIndex;
     },
   },
   mounted() {},

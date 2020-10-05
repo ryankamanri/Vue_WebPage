@@ -43,7 +43,26 @@
       <div class="biaoZhun"><span>标准</span></div>
       <div class="fenPei"><img src="~assets/audio/调节.png" alt="" /></div>
       <div class="geCi"><span>词</span></div>
-      <div class="lieBiao"><img src="~assets/audio/列表.png" alt="" /></div>
+      <div class="lieBiao">
+        <img src="~assets/audio/列表.png" @click="clickListMusic()" alt="" />
+      </div>
+    </div>
+    <!-- 列表 -->
+    <div class="musicList test-1" v-if="listDialog">
+      <el-table
+        :data="listData"
+        style="width: 100%"
+        @row-click="playMusicList"
+        stripe
+        :row-class-name="tableRowClassName"
+      >
+        <el-table-column type="index" label=" " width="40px"> </el-table-column>
+        <el-table-column prop="name" label="音乐标题" width="200px">
+        </el-table-column>
+        <el-table-column prop="ar[0].name" label="歌手" width="110px">
+        </el-table-column>
+        <el-table-column prop="dt" label="时长"> </el-table-column>
+      </el-table>
     </div>
     <!-- 歌曲 -->
     <audio
@@ -52,6 +71,7 @@
       ref="audioRef"
       autoplay
       id="musicAudio"
+      loop="loop"
     ></audio>
   </div>
 </template>
@@ -59,8 +79,10 @@
 <script>
 import { mapGetters } from "vuex";
 import { songTimeFormat } from "common/tool";
+
+import { getMusicUrl } from "network/children/geXing";
 // import { getNowMusic, getMusicListIds } from "store/getters";
-import { clearMusicList } from "store/index";
+// import { clearMusicList, getNowMusicList } from "store/index";
 export default {
   data() {
     return {
@@ -81,12 +103,41 @@ export default {
       musicInfo: {},
       //音乐url
       musicUrl: "",
+      //列表对话框
+      listDialog: false,
+      //列表数据
+      listData: [],
     };
   },
-  created() {},
+  created() {
+    this.ifEnd();
+  },
   mounted() {
     //初始化音乐
     this.installMusic();
+    var x = document.getElementById("musicAudio");
+    x.loop = false;
+    console.log(x.ended);
+    //当多次调用this的时候最好换一下
+    var self = this;
+    x.addEventListener(
+      "ended",
+      function () {
+        //获取当前索引
+        var index = self.$store.state.musicInfo.index;
+        //将下一首音乐信息传入store
+        var musicInfo = self.$store.state.nowMusicMenu[index + 1];
+        self.$store.commit("playMusicList", musicInfo);
+        //获取url
+        getMusicUrl(musicInfo.id)
+          .then((res) => {
+            //将url传入store
+            self.$store.commit("setMusicUrl", res.data[0].url);
+          })
+          .catch((err) => console.log(err));
+      },
+      true
+    );
   },
   computed: {
     //音乐改变
@@ -98,6 +149,7 @@ export default {
       "getMusicUrl",
       "getNowMusic",
       "getMusicListIds",
+      "getNowMusicList",
     ]),
   },
   //改变进度触发事件
@@ -117,8 +169,6 @@ export default {
         this.totalDuration = audio.duration;
         //获取歌曲时间
         this.musicDuration = audio.currentTime;
-        console.log(audio.currentTime);
-        console.log("456");
       });
     },
     //进度条点击
@@ -150,6 +200,36 @@ export default {
     // this.$store.commit("getNowMusicMenu", res.songs[0]);
     // console.log(this.$store.state.nowMusic);
     // },
+    //列表点击
+    clickListMusic() {
+      this.listDialog = !this.listDialog;
+    },
+    //关闭点击
+    handleClose(done) {
+      console.log("关闭了");
+      this.listDialog = false;
+    },
+
+    //监听歌曲是否播放完
+    ifEnd() {
+      /*  var x = document.getElementById("musicAudio");
+      console.log(x.currentSrc); */
+    },
+    //点击某音乐之后播放
+    playMusicList(e) {
+      console.log(e.index);
+      this.$store.commit("playMusicList", e);
+      this.$store.commit("setMusicUrl");
+      getMusicUrl(e.id)
+        .then((res) => {
+          this.$store.commit("setMusicUrl", res.data[0].url);
+        })
+        .catch((err) => console.log(err));
+    },
+    //获取每行索引
+    tableRowClassName({ row, rowIndex }) {
+      row.index = rowIndex;
+    },
   },
   filters: {
     filtersTime(time) {
@@ -157,17 +237,22 @@ export default {
     },
   },
   watch: {
+    //监听得到musicList
+    getNowMusicList: function () {
+      console.log("我getNowMusicList了");
+
+      this.listData = this.$store.state.nowMusicMenu;
+    },
     //监听得到url
     getMusicUrl: function (url) {
-      console.log("我wach到了");
       this.musicUrl = url;
       this.ifAudio = true;
     },
     //监听改变url
     getNowMusic: function () {
-      console.log("getNowMusic");
       this.musicUrl = this.$store.state.musicurl;
     },
+
     // getNowMusic: function (info) {
     //   this.ifAudio = false;
     //   this.$store.commit("clearNowMusic");
@@ -191,15 +276,11 @@ export default {
 
 <style lang="less" scoped>
 .mainBoxBottom {
+  position: relative;
   background-color: #f6f6f8;
   div {
     float: left;
   }
-  -moz-user-select: none; /*火狐*/
-  -webkit-user-select: none; /*webkit浏览器*/
-  -ms-user-select: none; /*IE10*/
-  -khtml-user-select: none; /*之前浏览器呵呵我是傻瓜*/
-  user-select: none;
 }
 .audioBtn {
   width: 200px;
@@ -333,5 +414,85 @@ export default {
       color: #666;
     }
   }
+}
+
+.musicList {
+  position: absolute;
+  width: 410px;
+  height: 400px;
+  background-color: #fff;
+  bottom: 2px;
+  right: 10px;
+  // border: 2px solid #ccc;
+  box-shadow: 0 0 7px #888;
+
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+//列表样式
+.el-tabs__content /deep/ .el-table td {
+  padding: 6px;
+}
+thead {
+  /deep/ .el-table th {
+    padding: 0;
+  }
+  /deep/ .el-table td {
+    padding: 0;
+  }
+}
+
+.el-table /deep/ th,
+td {
+  padding: 3px;
+  border-right: 1px solid var(--color-line);
+  font-weight: 400;
+  color: #000;
+  font-size: 12px;
+  .cell {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.el-table/deep/ td,
+th {
+  padding: 3px 0;
+  font-size: 11px;
+}
+.el-table /deep/ td,
+th.is-leaf {
+  border: 0;
+}
+.el-table /deep/ .el-table__row {
+  cursor: pointer;
+}
+tr /deep/ el-table__row:hover {
+  color: #000;
+}
+
+.caoZuoBtn {
+  width: 100%;
+  height: 20px;
+  img {
+    cursor: pointer;
+    position: relative;
+    top: 3px;
+    width: 16px;
+    height: 16px;
+    margin-left: 4px;
+  }
+  :nth-child(2) {
+    top: 1px;
+  }
+  :nth-child(1) {
+    left: -2px;
+  }
+}
+
+.el-table--scrollable-x /deep/ .el-table__body-wrapper {
+  overflow-x: hidden;
 }
 </style>

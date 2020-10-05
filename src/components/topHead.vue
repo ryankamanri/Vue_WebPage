@@ -119,6 +119,9 @@ export default {
     },
     //后退
     clickLeft() {
+      if (this.$route.path === "/home/find/geXing") {
+        return;
+      }
       this.$router.go("-1");
     },
     //前进
