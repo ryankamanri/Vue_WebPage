@@ -6,7 +6,6 @@
         <h3 class="tuiJian">推荐</h3>
         <el-menu
           :default-active="activePath"
-          background-color="#f5f5f7"
           text-color="#5c5c5c"
           active-text-color="#000000"
           :unique-opened="true"
@@ -73,7 +72,6 @@
         <h3 class="tuiJian">我的音乐</h3>
         <el-menu
           :default-active="activePath"
-          background-color="#f5f5f7"
           text-color="#5c5c5c"
           active-text-color="#000000"
           :unique-opened="true"
@@ -139,7 +137,6 @@
       <el-col>
         <el-menu
           :default-active="activePath"
-          background-color="#f5f5f7"
           text-color="#5c5c5c"
           active-text-color="#000000"
           :unique-opened="true"
@@ -217,6 +214,7 @@ export default {
   computed: {
     ...mapGetters(["getNowMusic"]),
     ifImgUndefined() {
+      if (!musicInfo) return;
       this.pinUrl =
         musicInfo.al.picUrl === undefined
           ? "https://p2.music.126.net/NhkuFBphLFaSmYMeW1-frQ==/109951164271814514.jpg"
@@ -228,11 +226,9 @@ export default {
     //获取左侧菜单
     async getMenu() {
       this.personInfo = JSON.parse(window.localStorage.getItem("getP"));
-      console.log(this.personInfo);
       const res = await this.$http.post("user/playlist", {
         uid: this.personInfo.userId,
       });
-      console.log(res);
       this.likeMusic = res.data.playlist;
     },
     handleOpen() {
@@ -273,11 +269,15 @@ export default {
   margin: 8px;
   font-weight: 400;
 }
+.tac /deep/ .el-menu {
+  background-color: rgba(0, 0, 0, 0.1);
+  border-right: 0;
+}
 .leftMenuWith {
   width: 200px;
 }
 .activeBg {
-  background-color: #e6e7ea !important;
+  // background-color: #e6e7ea !important;
   padding-left: 18px !important;
   border-left: 2px solid #c62f2f;
   color: #000;

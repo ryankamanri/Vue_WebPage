@@ -1,33 +1,5 @@
 import Vue from 'vue'
-import {
-  Input,
-  Button,
-  Message,
-  Menu,
-  Submenu,
-  Main,
-  MenuItem,
-  Row,
-  Col,
-  Form,
-  FormItem,
-  Container,
-  Header,
-  Aside,
-  Footer,
-  Carousel,
-  CarouselItem,
-  Tabs,
-  TabPane,
-  Table,
-  TableColumn,
-  Slider,
-  Avatar,
-  Popover,
-  Progress,
-  MenuItemGroup,
-  Dialog
-} from 'element-ui'
+import { Input, Button, Message, Menu, Submenu, Main, MenuItem, Row, Col, Form, FormItem, Container, Header, Aside, Footer, Carousel, CarouselItem, Tabs, TabPane, Table, TableColumn, Slider, Avatar, Popover, Progress, MenuItemGroup, Dialog, Tooltip, Dropdown, DropdownItem, DropdownMenu } from 'element-ui'
 
 Vue.use(Input)
 Vue.use(Button)
@@ -55,5 +27,9 @@ Vue.use(Popover)
 Vue.use(Progress)
 Vue.use(MenuItemGroup)
 Vue.use(Dialog)
+Vue.use(Tooltip)
+Vue.use(Dropdown)
+Vue.use(DropdownItem)
+Vue.use(DropdownMenu)
 
 Vue.prototype.$message = Message

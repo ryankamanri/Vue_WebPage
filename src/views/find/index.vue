@@ -26,7 +26,7 @@ export default {
   width: 940px;
   margin: 0 auto;
   height: 800px;
-  background-color: #fff;
+  /* background-color: #fff; */
 }
 .topBar {
   width: 940px;

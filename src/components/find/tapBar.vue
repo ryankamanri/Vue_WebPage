@@ -79,12 +79,15 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 .Box {
   width: 100%;
   height: 50px;
-  background-color: #fff;
+  /* background-color: #fff; */
   border-bottom: 1px solid #e1e1e2;
+}
+.Box /deep/ .el-menu {
+  background-color: rgba(0, 0, 0, 0.1);
 }
 .el-menu-demo {
   display: flex;
@@ -109,5 +112,6 @@ export default {
   border-bottom: 2px solid #c62f2f;
   color: #c62f2f;
   font-size: 15px;
+  background-color: rgba(0, 0, 0, 0.1);
 }
 </style>

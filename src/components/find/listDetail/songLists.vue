@@ -8,12 +8,15 @@
   >
     <el-table-column type="index" label=" " width="50px"> </el-table-column>
     <el-table-column label="操作" width="60px">
-      <template>
+      <template slot-scope="scope">
         <div class="caoZuoBtn">
           <img src="~assets/images/geXing/心.png" alt="喜欢" /><img
             src="~assets/images/geXing/下载.png"
             alt="下载"
           />
+        </div>
+        <div class="playing" v-if="ifPlaying(scope.row)">
+          <img src="~assets/images/geXing/心-熊.png" alt="喜欢" />
         </div>
       </template>
     </el-table-column>
@@ -87,6 +90,8 @@ export default {
     },
     //点击某音乐之后播放
     playMusicList(e) {
+      var audio = document.getElementById("musicAudio");
+      audio.loop = true;
       console.log(e);
       this.$store.commit("playMusicList", e);
 
@@ -101,8 +106,15 @@ export default {
     tableRowClassName({ row, rowIndex }) {
       row.index = rowIndex;
     },
+    //是否是正在播放
+    ifPlaying(row) {
+      // return this.$store.state.musicInfo.index===this.row
+      if (!row) return;
+      return row.index === this.$store.state.musicInfo.index;
+    },
   },
   mounted() {},
+  computed: {},
   watch: {
     $route: function (to, from) {
       if (!this.tableData) {
@@ -136,8 +148,11 @@ td {
   font-weight: 400;
   color: #000;
   font-size: 12px;
+  background-color: rgba(0, 0, 0, 0.1);
 }
-
+.el-table /deep/ tr {
+  background-color: rgba(0, 0, 0, 0.1px);
+}
 .el-table/deep/ td,
 th {
   padding: 3px 0;
@@ -148,6 +163,7 @@ th.is-leaf {
   border: 0;
 }
 .el-table /deep/ .el-table__row {
+  // background-color: rgba(0, 0, 0, 0.1);
   cursor: pointer;
 }
 tr /deep/ el-table__row:hover {
@@ -170,6 +186,16 @@ tr /deep/ el-table__row:hover {
   }
   :nth-child(1) {
     left: -2px;
+  }
+}
+
+.playing {
+  position: absolute;
+  left: -50px;
+  top: 3px;
+  img {
+    width: 25px;
+    height: 21px;
   }
 }
 </style>

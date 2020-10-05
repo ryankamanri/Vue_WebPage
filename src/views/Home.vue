@@ -1,18 +1,20 @@
 <template>
-  <div class="mainBox">
-    <div class="topBox">
-      <top-head></top-head>
-    </div>
-    <div class="centerBox">
-      <div class="leftBox"><left-menu></left-menu></div>
-      <div class="rightBox test-1">
-        <!-- <right-content /> -->
-        <keep-alive exclude="bestNew,geXing,paiHang,singer,songList,zhuBo">
-          <router-view></router-view>
-        </keep-alive>
+  <div class="backgrand">
+    <div class="mainBox">
+      <div class="topBox">
+        <top-head></top-head>
       </div>
+      <div class="centerBox">
+        <div class="leftBox"><left-menu></left-menu></div>
+        <div class="rightBox test-1">
+          <!-- <right-content /> -->
+          <keep-alive exclude="bestNew,geXing,paiHang,singer,songList,zhuBo">
+            <router-view></router-view>
+          </keep-alive>
+        </div>
+      </div>
+      <div class="footerBox"><bottom-audio /></div>
     </div>
-    <div class="footerBox"><bottom-audio /></div>
   </div>
 </template>
 <script>
@@ -56,14 +58,14 @@ export default {
 </script>
 <style lang="less" scoped>
 body {
-  background-color: #fafafa;
+  // background-color: #fafafa;
 }
 .mainBox {
   width: 1200px !important;
   height: 950px;
   // overflow: hidden;
   margin: 0 auto;
-  background-color: #f5f5f7;
+  // background-color: #f5f5f7;
   box-shadow: 0 0 30px #ccc;
 }
 .topBox {
@@ -83,14 +85,23 @@ body {
   float: left;
   width: 1000px;
   height: 850px;
-  background-color: #fff;
+  // background-color: #fff;
   max-height: 850px;
   overflow: auto;
 }
 .footerBox {
   height: 50px;
   width: 100%;
-  background-color: #f6f6f8;
+  // background-color: #f6f6f8;
   border-top: 1px solid #ccc;
+}
+
+.mainBox {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+.backgrand {
+  // background: url("~assets/images/download/壁纸3.jpg") no-repeat;
+  background-color: #fff;
+  background-size: 100% 100%;
 }
 </style>

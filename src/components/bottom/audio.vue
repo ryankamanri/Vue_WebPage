@@ -4,14 +4,23 @@
     <!-- 上一曲播放暂停下一曲 -->
     <div class="audioBtn">
       <div class="up">
-        <img src="~assets/audio/上一首.png" alt="" />
+        <a href="#" title="上一首">
+          <img src="~assets/audio/上一首.png" alt="" />
+        </a>
       </div>
       <div class="boFang" @click="switchAudio()">
-        <img src="~assets/audio/播放.png" v-if="!ifAudio" alt="" />
-        <img src="~assets/audio/暂停.png" v-if="ifAudio" alt="" />
+        <el-tooltip class="item" effect="dark" content="播放" placement="top">
+          <img src="~assets/audio/播放.png" v-if="!ifAudio" alt="" />
+        </el-tooltip>
+
+        <a href="#" title="暂停">
+          <img src="~assets/audio/暂停.png" v-if="ifAudio" alt="" />
+        </a>
       </div>
       <div class="down">
-        <img src="~assets/audio/下一首.png" alt="" />
+        <a href="#" title="下一首">
+          <img src="~assets/audio/下一首.png" alt="" />
+        </a>
       </div>
     </div>
     <!-- 时间线 -->
@@ -35,11 +44,16 @@
         :max="maxVoice"
         @input="voiceChange"
       ></el-slider>
-      <img src="~assets/audio/声音.png" alt="" />
+      <el-tooltip class="item" effect="dark" content="静音" placement="top">
+        <img src="~assets/audio/声音.png" style="cursor: pointer" alt="" />
+      </el-tooltip>
     </div>
     <!-- 列表循环歌词按钮 -->
     <div class="buttonBox">
-      <div class="xunHuan"><img src="~assets/audio/循环.png" alt="" /></div>
+      <el-tooltip class="item" effect="dark" content="列表循环" placement="top">
+        <div class="xunHuan"><img src="~assets/audio/循环.png" alt="" /></div>
+      </el-tooltip>
+
       <div class="biaoZhun"><span>标准</span></div>
       <div class="fenPei"><img src="~assets/audio/调节.png" alt="" /></div>
       <div class="geCi"><span>词</span></div>
@@ -115,12 +129,13 @@ export default {
   mounted() {
     //初始化音乐
     this.installMusic();
-    var x = document.getElementById("musicAudio");
-    x.loop = false;
-    console.log(x.ended);
+    var audio = document.getElementById("musicAudio");
+    audio.loop = false;
+    console.log(audio.ended);
     //当多次调用this的时候最好换一下
     var self = this;
-    x.addEventListener(
+    //监听播放器是否播放完
+    audio.addEventListener(
       "ended",
       function () {
         //获取当前索引
@@ -129,6 +144,7 @@ export default {
         var musicInfo = self.$store.state.nowMusicMenu[index + 1];
         self.$store.commit("playMusicList", musicInfo);
         //获取url
+        if (!musicInfo) return;
         getMusicUrl(musicInfo.id)
           .then((res) => {
             //将url传入store
@@ -220,6 +236,7 @@ export default {
       console.log(e.index);
       this.$store.commit("playMusicList", e);
       this.$store.commit("setMusicUrl");
+      //获取该音乐url并上传到store
       getMusicUrl(e.id)
         .then((res) => {
           this.$store.commit("setMusicUrl", res.data[0].url);
@@ -325,6 +342,7 @@ export default {
   img {
     position: relative;
     left: 1px;
+    top: 2px;
     width: 17px;
     height: 17px;
   }
@@ -344,7 +362,7 @@ export default {
 
 .el-slider {
   /deep/ .el-slider__bar {
-    height: 4px;
+    height: 6px;
     background-color: #e83c3c;
   }
   /deep/ .el-slider__button {

@@ -72,7 +72,8 @@
 import songLists from "components/find/listDetail/songLists";
 import shouCang from "components/find/listDetail/shouCang";
 import critic from "components/find/listDetail/critic";
-import { getListDetail } from "network/children/geXing";
+
+import { getListDetail, getMusicUrl } from "network/children/geXing";
 
 import { formatDate } from "common/tool";
 export default {
@@ -109,9 +110,20 @@ export default {
     },
     //将全部歌曲添加到列表
     playAll() {
+      //取消循环播放
+      var audio = document.getElementById("musicAudio");
+      audio.loop = false;
       //通过refs的形式将子组件传入父组件
       console.log(this.$refs.songListsRef.tableData);
       this.$store.commit("getNowMusicMenu", this.$refs.songListsRef.tableData);
+      if (!this.$store.state.nowMusicMenu[0].id) return;
+      this.$store.commit("playMusicList", this.$store.state.nowMusicMenu[0]);
+      //获取第一条音乐url并上传到store
+      getMusicUrl(this.$store.state.nowMusicMenu[0].id)
+        .then((res) => {
+          this.$store.commit("setMusicUrl", res.data[0].url);
+        })
+        .catch((err) => console.log(err));
     },
   },
   watch: {
@@ -149,9 +161,6 @@ export default {
   height: 200px;
   width: 200px;
   background-color: pink;
-
-  /* margin-right: 30px; */
-  /* z-index: 999; */
   img {
     width: 100%;
   }

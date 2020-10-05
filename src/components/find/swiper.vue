@@ -8,9 +8,9 @@
         height="200px"
         style="margin: 20px 30px"
       >
-        <el-carousel-item v-for="(item, index) in this.banners" :key="index">
+        <el-carousel-item v-for="(item, index) in banners" :key="index">
           <a :href="item.url">
-            <img :src="item.imageUrl" alt="" class="imgSize" />
+            <img :src="item.imageUrl || item.pic" alt="" class="imgSize" />
           </a>
         </el-carousel-item>
       </el-carousel>
@@ -22,20 +22,16 @@
 export default {
   name: "Recommed",
   data() {
-    return {
-      banners: [],
-    };
+    return {};
   },
-  created() {
-    this.getSwiter();
-  },
-  methods: {
-    //获取轮播图
-    async getSwiter() {
-      const res = await this.$http.post("banner");
-      this.banners = res.data.banners;
+  props: {
+    banners: {
+      type: Array,
+      default: [],
     },
   },
+  created() {},
+  methods: {},
 };
 </script>
 
