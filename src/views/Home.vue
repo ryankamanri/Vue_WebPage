@@ -100,8 +100,8 @@ body {
   background-color: rgba(0, 0, 0, 0.3);
 }
 .backgrand {
-  // background: url("~assets/images/download/壁纸3.jpg") no-repeat;
-  background-color: #fff;
+  background: url("~assets/images/download/壁纸3.jpg") no-repeat;
+  // background-color: rgb(255, 255, 255);
   background-size: 100% 100%;
 }
 </style>

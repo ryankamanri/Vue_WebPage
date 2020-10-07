@@ -117,6 +117,7 @@ export default {
   font-size: 12px;
   li {
     display: inline-block;
+    cursor: pointer;
   }
 }
 .musicImgBox {

@@ -123,9 +123,7 @@ export default {
       listData: [],
     };
   },
-  created() {
-    this.ifEnd();
-  },
+  created() {},
   mounted() {
     //初始化音乐
     this.installMusic();
@@ -206,16 +204,7 @@ export default {
     voiceChange(e) {
       this.$refs.audioRef.volume = e / 100;
     },
-    //得到音乐url
-    // getMusicUrl() {
-    // const Id = this.$store.state.musicInfo.id;
-    // const res = await this.$http.post("song/url", { id: Id });
-    // console.log(res);
-    // this.$store.commit("getNowMusic", res.data.data[0].url);
-    // const res1 = await this.$http.post("song/detail", { ids: Id });
-    // this.$store.commit("getNowMusicMenu", res.songs[0]);
-    // console.log(this.$store.state.nowMusic);
-    // },
+
     //列表点击
     clickListMusic() {
       this.listDialog = !this.listDialog;
@@ -226,11 +215,6 @@ export default {
       this.listDialog = false;
     },
 
-    //监听歌曲是否播放完
-    ifEnd() {
-      /*  var x = document.getElementById("musicAudio");
-      console.log(x.currentSrc); */
-    },
     //点击某音乐之后播放
     playMusicList(e) {
       console.log(e.index);
@@ -269,24 +253,6 @@ export default {
     getNowMusic: function () {
       this.musicUrl = this.$store.state.musicurl;
     },
-
-    // getNowMusic: function (info) {
-    //   this.ifAudio = false;
-    //   this.$store.commit("clearNowMusic");
-    //   console.log("hehe,清除完了");
-    //   this.getMusicUrl();
-    //   this.ifAudio = true;
-    // },
-    // getMusicListIds() {
-    //列表清零
-    //   this.$store.commit("clearMusicList");
-    //   this.getMusicUrl();
-    // },
-
-    // musicChange(newVal, oldVal) {
-    //   console.log(newVal);
-    //   console.log(oldVal);
-    // },
   },
 };
 </script>
