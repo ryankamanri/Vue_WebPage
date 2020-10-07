@@ -6,8 +6,10 @@ import './plugins/element.js'
 // 导入全局样式
 import './assets/css/globle.css'
 
-// 挂载store
+// 导入store
 import store from './store/index'
+//导入图片懒加载
+import LazyLoad from 'vue-lazyload'
 
 // 导入axios
 import axios from 'axios'
@@ -16,6 +18,9 @@ axios.defaults.baseURL = '/api'
 Vue.prototype.$http = axios
 
 Vue.config.productionTip = false
+
+//图片懒加载的使用
+Vue.use(LazyLoad)
 
 new Vue({
   router,
