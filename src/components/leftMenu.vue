@@ -59,7 +59,10 @@
         <div class="yuLan">
           <div class="yuLanLi">
             <div class="imgBox">
-              <img :src="musicInfo.al.picUrl" alt="" />
+              <img
+                :src="musicInfo.al.picUrl || musicInfo.artists[0].img1v1Url"
+                alt=""
+              />
             </div>
             <div class="textBox">
               <h5>{{ musicInfo.name }}</h5>
@@ -258,6 +261,8 @@ export default {
   watch: {
     getNowMusic(info) {
       this.musicInfo = info;
+      console.log(info);
+      console.log(this.musicInfo.artists[0].img1v1Url);
     },
   },
 };

@@ -1,36 +1,39 @@
 <template>
   <div>
     <Head-title style="margin-top: 25px" :headName="'官方榜'" :show="false" />
-    <ItemImg
+    <Item-img
       :imgInfo="item"
       :indexInfo="index"
       v-for="(item, index) in allMes"
       :key="index"
     />
+    <Head-title style="margin-top: 25px" :headName="'全球榜'" :show="false" />
+    <Quan-qiu :musiclists="allSongs" />
+    <!-- <Music-img :musiclists="allSongs"></Music-img> -->
   </div>
 </template>
 
 <script>
+import MusicImg from "common/musicImg";
+
 import HeadTitle from "components/find/zhuBo/headTitle";
 import ItemImg from "components/find/paiHang/itemImg";
+import QuanQiu from "components/find/paiHang/quanQiu";
 
 export default {
   data() {
     return {
       //所有信息
       allMes: [],
-      soarings: {},
-      newsongs: {},
-      original: {},
-      hotsong: {},
-      raphotlist: {},
-      raplist: {},
-      globalList: [],
+      //全球榜歌单
+      allSongs: [],
     };
   },
   components: {
     HeadTitle,
     ItemImg,
+    QuanQiu,
+    MusicImg,
   },
   created() {
     this.getPaiHangList();
@@ -39,15 +42,8 @@ export default {
     async getPaiHangList() {
       const res = await this.$http.post("toplist");
       this.allMes = res.data.list.splice(0, 6);
-      console.log(this.allMes);
-      this.soarings = this.allMes[0];
-      this.newsongs = this.allMes[1];
-      this.original = this.allMes[2];
-      this.hotsong = this.allMes[3];
-      this.raplist = this.allMes[4];
-      this.raphotlist = this.allMes[5];
-      console.log(res.list);
-      this.globalList = res.list;
+      this.allSongs = res.data.list;
+      console.log(this.allSongs);
     },
   },
 };

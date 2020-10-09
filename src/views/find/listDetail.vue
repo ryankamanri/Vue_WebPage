@@ -90,9 +90,7 @@ export default {
   created() {
     this.getMusicList();
   },
-  mounted() {
-    // this.getMusicList();
-  },
+  mounted() {},
   methods: {
     //获取列表
     getMusicList() {

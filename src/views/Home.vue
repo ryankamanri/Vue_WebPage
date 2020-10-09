@@ -1,5 +1,5 @@
 <template>
-  <div class="backgrand">
+  <div class="backgrand" id="backgrand">
     <div class="mainBox">
       <div class="topBox">
         <top-head></top-head>
@@ -103,5 +103,10 @@ body {
   background: url("~assets/images/download/壁纸3.jpg") no-repeat;
   // background-color: rgb(255, 255, 255);
   background-size: 100% 100%;
+}
+.colorChange {
+  position: absolute;
+  right: 0;
+  top: 0;
 }
 </style>

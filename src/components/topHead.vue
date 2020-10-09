@@ -19,8 +19,11 @@
           class="search-text h"
           type="text"
           placeholder="搜索音乐，视频，歌词，电台"
+          v-model="inputContent"
+          @keyup.enter="clickSearch()"
+          clearable
         />
-        <i class="el-icon-search"></i>
+        <i class="el-icon-search" @click="clickSearch()"></i>
       </div>
       <div class="topRight">
         <div class="boxRightRight">
@@ -101,6 +104,8 @@ export default {
         userType: 0,
         vipType: 0,
       },
+      //输入框的内容
+      inputContent: "",
     };
   },
   created() {
@@ -127,6 +132,13 @@ export default {
     //前进
     clickRight() {
       this.$router.go("1");
+    },
+    //搜索点击
+    clickSearch() {
+      console.log(this.inputContent);
+      this.$router.push("/home/search" + this.inputContent).catch((err) => {
+        console.log(err);
+      });
     },
   },
 };

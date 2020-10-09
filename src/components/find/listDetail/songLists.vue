@@ -129,44 +129,33 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.el-tabs__content /deep/ .el-table td {
-  padding: 6px;
-}
-thead {
-  /deep/ .el-table th {
-    padding: 0;
-  }
-  /deep/ .el-table td {
-    padding: 0;
-  }
-}
-
-.el-table /deep/ th,
-td {
+.el-table /deep/ th {
   padding: 3px;
   border-right: 1px solid var(--color-line);
   font-weight: 400;
   color: #000;
   font-size: 12px;
   background-color: rgba(0, 0, 0, 0.1);
+  white-space: nowrap;
 }
 .el-table /deep/ tr {
   background-color: rgba(0, 0, 0, 0.1px);
+  white-space: nowrap;
 }
-.el-table/deep/ td,
-th {
+.el-table/deep/ td {
   padding: 3px 0;
   font-size: 11px;
 }
 .el-table /deep/ td,
 th.is-leaf {
   border: 0;
+  white-space: nowrap;
 }
 .el-table /deep/ .el-table__row {
   // background-color: rgba(0, 0, 0, 0.1);
   cursor: pointer;
 }
-tr /deep/ el-table__row:hover {
+.el-table /deep/ .el-table__row:hover {
   color: #000;
 }
 

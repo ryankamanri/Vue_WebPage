@@ -63,3 +63,8 @@ td,
 th {
   font-family: Verdana, Arial, Helvetica, sans-serif
 }
+
+li {
+  list-style: none;
+  display: inline-block;
+}

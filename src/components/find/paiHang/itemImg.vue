@@ -8,40 +8,42 @@
             'url(' + imgInfo.coverImgUrl + ') no-repeat 0 -65px/300px 215px',
           height: '90px',
         }"
-      >
-        <!-- <img :src="imgInfo.coverImgUrl" alt="" /> -->
-      </div>
+        @click="topImgClick()"
+      ></div>
 
       <div class="musicList">
-        {{ imgInfo.id }}
+        <div class="rowBox" v-for="(item, index) in musicList" :key="index">
+          <p class="indexSpan">{{ index }}</p>
+          <div class="listRight">
+            <p class="titleSpan" @click="clickTitle(item)">
+              {{ item.name }}
+            </p>
+            <p class="singerSpan">{{ item.ar[0].name }}</p>
+          </div>
+        </div>
       </div>
-      <!-- <div class="musicList"> -->
-      <!-- <el-table
-          :data="listData"
-          style="width: 100%"
-          @row-click="playMusicList"
-          stripe
-          :row-class-name="tableRowClassName"
-        >
-          <el-table-column type="index" label=" " width="40px">
-          </el-table-column>
-          <el-table-column prop="name" label="音乐标题" width="200px">
-          </el-table-column>
-          <el-table-column prop="ar[0].name" label="歌手" width="110px">
-          </el-table-column>
-        </el-table> -->
-      <!-- </div> -->
+
+      <div class="lookMore">
+        <a href="#" @click="topImgClick()">查看等多></a>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import {
+  getSongListInfoSongs,
+  getListDetail,
+  getMusicUrl,
+} from "network/children/geXing";
+
 export default {
   data() {
     return {
       musicId: "",
-      musicList: [],
+      musicListIds: [],
       // thisImgInfo:this.imgInfo
+      musicList: [],
     };
   },
   props: {
@@ -62,31 +64,67 @@ export default {
   components: {},
   created() {
     this.getMusicId();
+    // this.getMusicListInfo();
   },
   methods: {
     //点击某音乐之后播放
-    playMusicList(e) {
-      console.log(e.index);
+    // playMusicList(e) {
+    //   console.log(e.index);
+    //   this.$store.commit("playMusicList", e);
+    //   this.$store.commit("setMusicUrl");
+    //   //获取该音乐url并上传到store
+    //   getMusicUrl(e.id)
+    //     .then((res) => {
+    //       this.$store.commit("setMusicUrl", res.data[0].url);
+    //     })
+    //     .catch((err) => console.log(err));
+    // },
+    //获取每行索引
+    // tableRowClassName({ row, rowIndex }) {
+    //   row.index = rowIndex;
+    // },
+    //获取
+    getMusicId() {
+      getListDetail(this.imgInfo.id).then((res) => {
+        //获取Ids
+        const musicListInfos = res.playlist.trackIds.splice(0, 8);
+        musicListInfos.map((item) => {
+          this.musicListIds.push(item.id);
+        });
+        const musics = this.musicListIds.toString();
+        if (!musics) return;
+        getSongListInfoSongs(musics)
+          .then((res) => {
+            this.musicList = res.songs;
+          })
+          .catch((err) => console.log(err));
+      });
+    },
+    //
+    //根据Ids获取每首歌信息
+    getMusicListInfo() {
+      console.log(this.musicListIds);
+      this.musicListIds.map((item) => {
+        // const res = await this.$http.post("song/detail", { ids: item.id });
+        console.log(item);
+        // console.log(res);
+      });
+    },
+    topImgClick() {
+      this.$router.push("/home/listDetail" + this.imgInfo.id);
+    },
+    clickTitle(e) {
+      var audio = document.getElementById("musicAudio");
+      audio.loop = true;
+      console.log(e);
       this.$store.commit("playMusicList", e);
+
       this.$store.commit("setMusicUrl");
-      //获取该音乐url并上传到store
       getMusicUrl(e.id)
         .then((res) => {
           this.$store.commit("setMusicUrl", res.data[0].url);
         })
         .catch((err) => console.log(err));
-    },
-    //获取每行索引
-    tableRowClassName({ row, rowIndex }) {
-      row.index = rowIndex;
-    },
-    //获取
-    async getMusicId() {
-      console.log(this.imgInfo.id);
-      const res = await this.$http.post("playlist/detail", {
-        id: this.imgInfo.id,
-      });
-      console.log(res.data);
     },
   },
   watch: {
@@ -102,17 +140,11 @@ export default {
   background-color: #fff;
   float: left;
   width: 300px;
-  height: 380px;
+  height: 370px;
   margin-top: 20px;
   margin-right: 20px;
   .imgBox {
-    // background: "url(" + imgInfo.coverImgUrl + ")";
-    // width: 100%;
-    // height: 90px;
-    // img {
-    //   width: 300px;
-    //   height: 90px;
-    // }
+    cursor: pointer;
   }
 }
 
@@ -123,16 +155,10 @@ export default {
 //列表
 .musicList {
   // position: absolute;
-  width: 410px;
-  height: 400px;
-  background-color: #fff;
-  // bottom: 2px;
-  // right: 10px;
-  // border: 2px solid #ccc;
-  box-shadow: 0 0 7px #888;
-
-  overflow-x: hidden;
-  overflow-y: scroll;
+  width: 300px;
+  height: 240px;
+  background-color: rgba(0, 0, 0, 0.1);
+  overflow: hidden;
 }
 
 //列表样式
@@ -176,5 +202,64 @@ th.is-leaf {
 }
 tr /deep/ el-table__row:hover {
   color: #000;
+}
+.rowBox:hover {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+.rowBox {
+  width: 300px;
+  height: 30px;
+  line-height: 30px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+  font-size: 13px;
+
+  .indexSpan {
+    width: 45px;
+    color: rgb(245, 40, 40);
+    font-size: 18px;
+  }
+  .listRight {
+    float: left;
+    width: 255px;
+    .titleSpan {
+      float: left;
+      cursor: pointer;
+    }
+
+    .singerSpan {
+      float: right;
+      margin-right: 10px;
+      color: #888;
+    }
+  }
+
+  p {
+    float: left;
+    height: 30px;
+    line-height: 30px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.lookMore {
+  float: right;
+  height: 40px;
+  width: 290px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding-right: 10px;
+  background-color: #f5f5f7;
+
+  a {
+    display: inline-block;
+    color: #000;
+    color: #888;
+  }
 }
 </style>
