@@ -2,7 +2,7 @@
   <div class="maxBox">
     <div class="Box">
       <el-menu
-        :default-active="activeIndex"
+        default-active="geXing"
         class="el-menu-demo"
         mode="horizontal"
         @select="handleSelect"
@@ -87,7 +87,7 @@ export default {
   border-bottom: 1px solid #e1e1e2;
 }
 .Box /deep/ .el-menu {
-  background-color: rgba(0, 0, 0, 0.1);
+  // background-color: rgba(0, 0, 0, 0.1);
 }
 .el-menu-demo {
   display: flex;
@@ -112,6 +112,6 @@ export default {
   border-bottom: 2px solid #c62f2f;
   color: #c62f2f;
   font-size: 15px;
-  background-color: rgba(0, 0, 0, 0.1);
+  // background-color: rgba(0, 0, 0, 0.1);
 }
 </style>

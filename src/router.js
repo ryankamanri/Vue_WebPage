@@ -7,10 +7,10 @@ const Home = () => import("views/Home")
 const Login = () => import("views/Login")
 //左侧菜单一级路由---推荐
 const find = () => import("views/find/index")
-const MyRadio = () => import("views/MyRadio")
-const Live = () => import("views/Live")
-const Video = () => import("views/Video")
-const Friends = () => import("views/Friends")
+const MyRadio = () => import("views/myRadio/MyRadio")
+const Live = () => import("views/live/Live")
+const Video = () => import("views/video/Video")
+const Friends = () => import("views/friends/Friends")
 //左侧菜单一级路由---我的音乐
 const cloudPan = () => import("views/myMusic/cloudPan")
 const dianTai = () => import("views/myMusic/dianTai")
@@ -23,9 +23,19 @@ const shouCang = () => import("views/myMusic/shouCang")
 //右侧find的二级路由
 listDetail
 const listDetail = () => import("views/find/listDetail")
+//右侧歌手详情的二级路由
+listDetail
+const singerDetail = () => import("views/singerDetail/singerDetail")
 
 //右侧搜索二级路由
 const searchList = () => import("components/search/searchList")
+//右侧正在播放二级路由
+const playing = () => import("components/playing/playing")
+//右侧视频播放
+const videoing = () => import("views/videoing/videoing")
+//右侧视频播放
+const mving = () => import("views/videoing/mving")
+
 
 //右边三级路由：find 发现音乐 
 const geXing = () => import("views/find/children/geXing")
@@ -34,6 +44,13 @@ const paiHang = () => import("views/find/children/paiHang")
 const singer = () => import("views/find/children/singer")
 const songList = () => import("views/find/children/songList")
 const zhuBo = () => import("views/find/children/zhuBo")
+
+//右边三级路由：vidoe视频
+const mvs = () => import("views/video/children/mvs")
+const videos = () => import("views/video/children/videos")
+
+
+
 Vue.use(VueRouter)
 
 //获取原型对象上的push函数
@@ -64,9 +81,7 @@ const routes = [{
         path: 'find',
         component: find,
         meta: {
-
           keepAlive: false //true是保存缓存，false是不保存
-
         },
         children: [{
           path: '/',
@@ -106,7 +121,20 @@ const routes = [{
         component: Live
       }, {
         path: 'video',
-        component: Video
+        component: Video,
+        children: [{
+          path: '/',
+          redirect:'videos'
+        },
+          {
+            path: 'mvs',
+            component:mvs
+          },
+          {
+            path: 'videos',
+            component:videos
+          },
+        ]
       }, {
         path: 'friends',
         component: Friends
@@ -116,12 +144,9 @@ const routes = [{
       },
       {
         path: 'listDetail:id',
-        component: listDetail
+        component: listDetail 
       },
-      {
-        path: 'search:id',
-        component: searchList
-      },
+      
       {
         path: 'cloudPan',
         component: cloudPan
@@ -136,7 +161,19 @@ const routes = [{
         component: localMusic
       }, {
         path: 'shouCang',
-        component: shouCang
+        component: shouCang,
+      }, {
+        path: 'playing',
+        component: playing,
+      }, {
+        path: 'singer:id',
+        component: singerDetail 
+      },{
+        path: 'videoing:id',
+        component: videoing
+      }, {
+        path: 'mving:id',
+        component: mving
       }
     ]
   },

@@ -38,5 +38,17 @@ export default {
   //音乐地址
   setMusicUrl(state, url) {
     state.musicurl = url
+    state.musicState = true
+    console.log('我设置了播放状态为：'+state.musicState);
   },
+  //播放状态
+  setMusicState(state) {
+    state.musicState = !state.musicState
+    console.log('我设置了播放状态'+state.musicState);
+  },
+  //正在播放的视频
+  setVideoInfo(state, info) {
+    state.nowVideoInfo = info
+    console.log('我设置了播放的视频'+info);
+  }
 }

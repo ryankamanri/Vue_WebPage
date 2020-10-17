@@ -1,37 +1,40 @@
-<template>
-  <el-table
-    :data="tableData"
-    style="width: 100%"
-    @row-click="playMusicList"
-    stripe
-    :row-class-name="tableRowClassName"
-  >
-    <el-table-column type="index" label=" " width="50px"> </el-table-column>
-    <el-table-column label="操作" width="60px">
-      <template slot-scope="scope">
-        <div class="caoZuoBtn">
-          <img src="~assets/images/geXing/心.png" alt="喜欢" /><img
-            src="~assets/images/geXing/下载.png"
-            alt="下载"
-          />
-        </div>
-        <div class="playing" v-if="ifPlaying(scope.row)">
-          <img src="~assets/images/geXing/心-熊.png" alt="喜欢" />
-        </div>
-      </template>
-    </el-table-column>
-    <el-table-column prop="name" label="音乐标题" width="333px">
-    </el-table-column>
-    <el-table-column prop="ar[0].name" label="歌手" width="236px">
-    </el-table-column>
-    <el-table-column prop="al.name" label="专辑" width="214px">
-    </el-table-column>
-    <el-table-column prop="dt" label="时长"> </el-table-column>
-  </el-table>
+<template >
+  <div class="mBox">
+    <el-table
+      :data="tableData"
+      style="width: 100%"
+      @row-click="playMusicList"
+      stripe
+      :row-class-name="tableRowClassName"
+    >
+      <el-table-column type="index" label=" " width="50px"> </el-table-column>
+      <el-table-column label="操作" width="60px">
+        <template slot-scope="scope">
+          <div class="caoZuoBtn">
+            <img src="~assets/images/geXing/心.png" alt="喜欢" /><img
+              src="~assets/images/geXing/下载.png"
+              alt="下载"
+            />
+          </div>
+          <div class="playing" v-if="ifPlaying(scope.row)">
+            <img src="~assets/images/geXing/心-熊.png" alt="喜欢" />
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column prop="name" label="音乐标题" width="333px">
+      </el-table-column>
+      <el-table-column prop="ar[0].name" label="歌手" width="236px">
+      </el-table-column>
+      <el-table-column prop="al.name" label="专辑" width="214px">
+      </el-table-column>
+      <el-table-column prop="dt" label="时长"> </el-table-column>
+    </el-table>
+  </div>
 </template>
 
 <script>
 import { timeFormat } from "common/tool";
+
 import {
   getListDetail,
   getSongListInfoSongs,
@@ -40,6 +43,7 @@ import {
 
 import {} from "network/request";
 export default {
+  components: {},
   data() {
     return {
       tableData: [],
@@ -47,35 +51,52 @@ export default {
       playlist: {},
       creators: {},
       count: 0,
+      nowCount: 1,
+      i: 0,
     };
   },
   created() {
     this.getMusicList();
     console.log("hehe");
+    document
+      .getElementById("Right_box")
+      .addEventListener("scroll", this.listener, true);
+    console.log("hehe");
+  },
+  mounted() {},
+  destroyed() {
+    document
+      .getElementById("Right_box")
+      .removeEventListener("scroll", this.listener, true);
   },
   methods: {
     //获取列表
-    getMusicList() {
-      if (this.tableData) this.tableData = [];
-      if (this.musicIds) this.musicIds = [];
-      const id = this.$route.params.id;
+    async getMusicList() {
+      let _this = this;
+      if (_this.tableData) _this.tableData = [];
+      if (_this.musicIds) _this.musicIds = [];
+      let id = _this.$route.params.id;
       if (!id) return;
-      getListDetail(id)
-        .then((res) => {
-          this.playlist = res.playlist;
-          this.creators = res.playlist.creator;
-          //获取列表前20条数据
-          for (let i in this.playlist.trackIds) {
-            if (i < 20) {
-              this.musicIds.push(this.playlist.trackIds[i].id);
-            }
-          }
-          //获取列表前20条数据每条的信息
-          this.musicIds.map((item2) => {
-            this.getSongDetail(item2);
-          });
-        })
-        .catch((err) => console.log(err));
+      var res = await _this.$http.get("playlist/detail", {
+        params: { id: id },
+      });
+      console.log(res);
+      _this.playlist = res.data.playlist;
+      _this.creators = res.data.playlist.creator;
+      this.nowCount = 20;
+      this.getTwoInfo(this.nowCount);
+    },
+    //每次获取20条数据
+    getTwoInfo(n) {
+      this.musicIds = [];
+      //获取列表前20条数据
+      for (this.i; this.i < n; this.i++) {
+        this.musicIds.push(this.playlist.trackIds[this.i].id);
+      }
+      //获取列表前20条数据每条的信息
+      this.musicIds.map((item2) => {
+        this.getSongDetail(item2);
+      });
     },
     //获取每首歌时长名字歌手
     getSongDetail(item) {
@@ -94,7 +115,6 @@ export default {
       audio.loop = true;
       console.log(e);
       this.$store.commit("playMusicList", e);
-
       this.$store.commit("setMusicUrl");
       getMusicUrl(e.id)
         .then((res) => {
@@ -111,6 +131,17 @@ export default {
       // return this.$store.state.musicInfo.index===this.row
       if (!row) return;
       return row.index === this.$store.state.musicInfo.index;
+    },
+    //下拉懒加载
+    listener() {
+      let a = document.getElementById("Right_box").scrollHeight;
+      let b = document.getElementById("Right_box").clientHeight;
+      let c = document.getElementById("Right_box").scrollTop;
+      console.log(a, b, c);
+      if (a - b === c && this.nowCount < this.playlist.trackIds.length) {
+        this.nowCount += 20;
+        this.getTwoInfo(this.nowCount);
+      }
     },
   },
   mounted() {},
@@ -129,6 +160,13 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.mBox {
+  margin-bottom: 30px;
+}
+.mBox /deep/ .el-table {
+  opacity: 0.9;
+  background-color: rgba(255, 255, 255, 0.6) !important;
+}
 .el-table /deep/ th {
   padding: 3px;
   border-right: 1px solid var(--color-line);
@@ -139,7 +177,6 @@ export default {
   white-space: nowrap;
 }
 .el-table /deep/ tr {
-  background-color: rgba(0, 0, 0, 0.1px);
   white-space: nowrap;
 }
 .el-table/deep/ td {

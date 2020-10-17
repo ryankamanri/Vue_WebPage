@@ -1,5 +1,12 @@
 import Vue from 'vue'
-import { Input, Button, Message, Menu, Submenu, Main, MenuItem, Row, Col, Form, FormItem, Container, Header, Aside, Footer, Carousel, CarouselItem, Tabs, TabPane, Table, TableColumn, Slider, Avatar, Popover, Progress, MenuItemGroup, Dialog, Tooltip, Dropdown, DropdownItem, DropdownMenu, ColorPicker } from 'element-ui'
+import {
+  Input, Button, Message, Menu, Submenu, Main,
+  MenuItem, Row, Col, Form, FormItem, Container, Header,
+  Aside, Footer, Carousel, CarouselItem, Tabs, TabPane,
+  Table, TableColumn, Slider, Avatar, Popover, Progress,
+  MenuItemGroup, Dialog, Tooltip, Dropdown, DropdownItem,
+  DropdownMenu, ColorPicker,Pagination
+} from 'element-ui'
 
 Vue.use(Input)
 Vue.use(Button)
@@ -32,5 +39,6 @@ Vue.use(Dropdown)
 Vue.use(DropdownItem)
 Vue.use(DropdownMenu)
 Vue.use(ColorPicker)
+Vue.use(Pagination)
 
 Vue.prototype.$message = Message

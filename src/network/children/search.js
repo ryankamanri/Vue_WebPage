@@ -2,14 +2,15 @@ import {
   request
 } from '../request'
 //获取歌手分类
-export function getSingersList(letter, type, area) {
+export function getSingersList(letter, type, area,limit ) {
   return request({
     url: 'artist/list',
     params: {
-      // limit: 30,
-      initial: letter,
-      type: type,
-      area: area
+      
+       letter,
+       type,
+     area,
+      limit
     },
   });
 

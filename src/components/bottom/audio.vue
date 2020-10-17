@@ -95,8 +95,6 @@ import { mapGetters } from "vuex";
 import { songTimeFormat } from "common/tool";
 
 import { getMusicUrl } from "network/children/geXing";
-// import { getNowMusic, getMusicListIds } from "store/getters";
-// import { clearMusicList, getNowMusicList } from "store/index";
 export default {
   data() {
     return {
@@ -193,11 +191,12 @@ export default {
     switchAudio() {
       if (this.ifAudio) {
         this.$refs.audioRef.pause();
+        console.log("暂停了~");
       } else {
         this.$refs.audioRef.play();
+        console.log("播放了~");
       }
-      console.log(this.$refs.audioRef);
-
+      this.$store.commit("setMusicState");
       this.ifAudio = !this.ifAudio;
     },
     //声音调节改变

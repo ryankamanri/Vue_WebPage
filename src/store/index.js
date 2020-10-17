@@ -19,7 +19,11 @@ const state = {
   // 音乐清单
   nowMusicMenu: [],
   //音乐url
-  musicurl: ''
+  musicurl: '',
+  //播放状态
+  musicState: false,
+  //正在播放的视频
+  nowVideoInfo:{}
 }
 
 

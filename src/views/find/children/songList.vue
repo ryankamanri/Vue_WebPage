@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="allList">
-      <el-dropdown trigger="click">
+      <el-dropdown size="medium" trigger="click">
         <span class="el-dropdown-link">
           全部歌单<i class="el-icon-arrow-down el-icon--right"></i>
         </span>
@@ -32,15 +32,22 @@
         </li>
       </ul>
     </div>
-    <div class="musicImgBox">
+    <div class="musicImgBox clearfix">
       <music-img :musiclists="musicList"></music-img>
     </div>
+    <Fenye
+      :total="total"
+      :limit="cateListProm.limit"
+      @pageChange="pageChange"
+    />
   </div>
 </template>
 
 <script>
-import musicImg from "common/musicImg";
+import { scrollAnimation } from "common/tool";
 
+import musicImg from "common/musicImg";
+import Fenye from "components/fenye/fenye";
 import { getTopPlayList } from "network/children/musicList";
 export default {
   data() {
@@ -52,17 +59,16 @@ export default {
       //标签名字
       biaoQianName: [],
       //歌单获取
-      limit: 15,
-      offset: 0,
-      cat: "全部",
+      cateListProm: { limit: 60, offset: 0, cat: "全部" },
+      total: 10,
     };
   },
-  components: { musicImg },
+  components: { musicImg, Fenye },
   created() {
     //获取分类名字
     this.getCateageName();
     //获取音乐图片
-    this.getBiaoName();
+    this.getBiaoName(this.cateListProm);
   },
   methods: {
     //获取分类名字
@@ -73,22 +79,28 @@ export default {
       this.cateageName = [...this.biaoQianName].splice(0, 5);
     },
     //获取音乐图片
-    async getBiaoName() {
-      await this.$http.post("top/playlist", this.cateListProm).then((res) => {
-        this.musicList = res.data.playlists;
-      });
+    async getBiaoName(cateListProm) {
+      await this.$http
+        .get("top/playlist", { params: cateListProm })
+        .then((res) => {
+          console.log(this.cateListProm);
+          console.log(res);
+          this.total = res.data.total;
+          this.musicList = res.data.playlists;
+        });
     },
     //点击类名获取歌曲
     clickName(name, index) {
-      this.cat = name;
-      getTopPlayList(this.limit, this.offset, this.cat)
-        .then((res) => {
-          console.log(res);
-          this.musicList = res.playlists;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      console.log(name);
+      this.cateListProm.cat = name;
+      this.getBiaoName(this.cateListProm);
+    },
+    //监听页面改变
+    pageChange(page) {
+      this.cateListProm.offset = (page - 1) * this.cateListProm.limit;
+      let length = document.getElementById("Right_box").scrollHeight;
+      scrollAnimation(length, 0);
+      this.getBiaoName(this.cateListProm);
     },
   },
 };
@@ -105,8 +117,14 @@ export default {
 }
 .allList /deep/.el-dropdown-menu {
   position: relative;
-  top: -20px;
+  // top: -40px;
+  top: 150px;
+  left: 328px;
 }
+.el-dropdown-menu /deep/ li {
+  display: block;
+}
+
 .biaoQian {
   span {
     font-size: 12px;

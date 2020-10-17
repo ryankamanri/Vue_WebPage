@@ -68,3 +68,42 @@ li {
   list-style: none;
   display: inline-block;
 }
+
+.clearMarginRight {
+  margin-right: 0 !important;
+}
+
+.cr {
+  margin-right: 0 !important;
+}
+
+/* 触碰文字变黑 */
+.cur {
+  cursor: pointer;
+}
+
+.cur:hover {
+  color: #000 !important;
+}
+
+/* 不换行 */
+.nowp {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 清除浮动 */
+.clearfix:after {
+  /*伪元素是行内元素 正常浏览器清除浮动方法*/
+  content: "";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
+}
+
+.clearfix {
+  *zoom: 1;
+  /*ie6清除浮动的方式 *号只有IE6-IE7执行，其他浏览器不执行*/
+}

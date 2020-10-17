@@ -44,6 +44,8 @@ export default {
       const res = await this.$http.post("banner");
       this.bannersInfo = res.data.banners;
     },
+    //下拉加载更多
+    getMore() {},
   },
   computed: {},
 };

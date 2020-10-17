@@ -21,5 +21,15 @@ export default {
   //监听音乐列表
   getNowMusicList(state) {
     return state.nowMusicMenu
+  },
+  //音乐播放状态
+  getMusicState(state) {
+    return state.musicState
+  },
+  //视频播放信息
+  getVideoInfo(state) {
+    console.log('我监听得到了' + state.nowVideoInfo);
+    console.log(state.nowVideoInfo);
+  return state.nowVideoInfo
   }
 }

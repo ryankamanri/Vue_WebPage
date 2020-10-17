@@ -1,11 +1,11 @@
 <template>
   <!-- 主体 -->
-  <el-container>
+  <el-container style="position: relative">
     <el-row class="tac">
       <el-col>
         <h3 class="tuiJian">推荐</h3>
         <el-menu
-          :default-active="activePath"
+          default-active="/home/find/geXing"
           text-color="#5c5c5c"
           active-text-color="#000000"
           :unique-opened="true"
@@ -56,20 +56,17 @@
             <span slot="title">朋友</span>
           </el-menu-item>
         </el-menu>
-        <div class="yuLan">
+        <!--      <div class="yuLan">
           <div class="yuLanLi">
             <div class="imgBox">
-              <img
-                :src="musicInfo.al.picUrl || musicInfo.artists[0].img1v1Url"
-                alt=""
-              />
+              <img :src="musicInfo.artists[0] || musicInfo.al" alt="" />
             </div>
             <div class="textBox">
               <h5>{{ musicInfo.name }}</h5>
               <h5>正在播放:</h5>
             </div>
           </div>
-        </div>
+        </div -->
       </el-col>
       <el-col>
         <h3 class="tuiJian">我的音乐</h3>
@@ -128,7 +125,10 @@
         <div class="yuLan">
           <div class="yuLanLi">
             <div class="imgBox">
-              <img :src="musicInfo.al.picUrl" alt="" />
+              <img class="imgBoxImg" :src="musicInfo.al.picUrl" alt="" />
+            </div>
+            <div class="bgImgBox" @click="pushPlaying()">
+              <img src="~assets/images/playMusic/展开.png" alt="" />
             </div>
             <div class="textBox">
               <h5>{{ musicInfo.name }}</h5>
@@ -178,35 +178,69 @@
       </el-col>
     </el-row>
     <el-row class="tac"> </el-row>
+    <!-- <div class="playing">
+      <Playing :playNone="ifShow" />
+    </div> -->
   </el-container>
 </template>
 
 <script>
 // import { getNowMusic } from "store/index";
 import { mapGetters } from "vuex";
+
+import Playing from "components/playing/playing";
 export default {
   name: "leftMenu",
   data() {
     return {
       //当前活跃的路径
-      activePath: "",
+      activePath: "/home/find/geXing",
       isCollapse: false,
       //音乐信息
       musicInfo: {
         name: "网易云音乐",
+        /*     al: {
+          picUrl:
+            // "https://p2.music.126.net/NhkuFBphLFaSmYMeW1-frQ==/109951164271814514.jpg",
+            "",
+        }, */
+        artists: [
+          {
+            picUrl:
+              "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1602913790436&di=a25e050830809e72bd4ee8a134474b11&imgtype=0&src=http%3A%2F%2Fku.90sjimg.com%2Felement_origin_min_pic%2F18%2F07%2F10%2F3e4575f9df9afb8c4d49883b2f5cfce6.jpg",
+          },
+        ],
         al: {
           picUrl:
-            "https://p2.music.126.net/NhkuFBphLFaSmYMeW1-frQ==/109951164271814514.jpg",
+            "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1602913790436&di=a25e050830809e72bd4ee8a134474b11&imgtype=0&src=http%3A%2F%2Fku.90sjimg.com%2Felement_origin_min_pic%2F18%2F07%2F10%2F3e4575f9df9afb8c4d49883b2f5cfce6.jpg",
+          name: "歌名",
+          pic: 0,
+          id: 0,
         },
+
+        ar: [
+          {
+            id: 0,
+            name: "歌手",
+          },
+        ],
+        dt: 0,
       },
-      pinUrl: "",
       //个人信息
       personInfo: {},
       //喜欢的音乐
       likeMusic: [],
+      //是否显示
+      ifShow: { isShow: false },
     };
   },
+  components: {
+    Playing,
+  },
   created() {
+    //检测
+    this.jianCe(this.musicInfo);
+    console.log(this.musicInfo);
     //获取菜单路径
     this.getMenu();
     //获取活跃路径
@@ -216,14 +250,6 @@ export default {
   },
   computed: {
     ...mapGetters(["getNowMusic"]),
-    ifImgUndefined() {
-      if (!musicInfo) return;
-      this.pinUrl =
-        musicInfo.al.picUrl === undefined
-          ? "https://p2.music.126.net/NhkuFBphLFaSmYMeW1-frQ==/109951164271814514.jpg"
-          : this.musicInfo.al.picUrl;
-      // console.log(this.musicInfo.name);
-    },
   },
   methods: {
     //获取左侧菜单
@@ -253,6 +279,37 @@ export default {
     handleClose(key, keyPath) {
       console.log(key, keyPath);
     },
+    //跳转到正在播放
+    pushPlaying() {
+      console.log(this.$store.state);
+      if (!this.$store.state.musicurl) {
+        return;
+      }
+      this.$router.push("/home/playing");
+      // this.ifShow.isShow = true;
+    },
+    //检测
+    jianCe(info) {
+      if (info.al === undefined) {
+        info = {
+          al: {
+            picUrl:
+              "http://p4.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+            name: "歌名",
+            pic: 0,
+            id: 0,
+          },
+          ar: [
+            {
+              id: 0,
+              name: "歌手",
+            },
+          ],
+          dt: 0,
+        };
+        console.log(info);
+      }
+    },
   },
 
   ifNameUndefined() {
@@ -260,9 +317,10 @@ export default {
   },
   watch: {
     getNowMusic(info) {
+      this.jianCe(info);
       this.musicInfo = info;
+
       console.log(info);
-      console.log(this.musicInfo.artists[0].img1v1Url);
     },
   },
 };
@@ -275,7 +333,7 @@ export default {
   font-weight: 400;
 }
 .tac /deep/ .el-menu {
-  background-color: rgba(0, 0, 0, 0.1);
+  // background-color: rgba(0, 0, 0, 0.1);
   border-right: 0;
 }
 .leftMenuWith {
@@ -285,6 +343,7 @@ export default {
   // background-color: #e6e7ea !important;
   padding-left: 18px !important;
   border-left: 2px solid #c62f2f;
+  background-color: rgba(0, 0, 0, 0.1);
   color: #000;
 }
 .el-menu /deep/ .el-menu-item {
@@ -327,6 +386,28 @@ export default {
       height: 100%;
     }
   }
+
+  .bgImgBox {
+    display: none;
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 45px;
+    height: 45px;
+    // z-index: 999;
+    background-color: rgba(0, 0, 0, 0.6);
+    img {
+      position: relative;
+      left: 7px;
+      top: 6px;
+      width: 70%;
+      height: 70%;
+    }
+  }
+
+  .yuLanLi:hover .bgImgBox {
+    display: inline-block !important;
+  }
   .textBox {
     float: left;
     margin-left: 10px;
@@ -358,5 +439,12 @@ export default {
   position: relative;
   right: 10px;
   bottom: 10px;
+}
+.playing {
+  position: absolute;
+  left: 200px;
+  top: 0;
+  z-index: 999;
+  animation: slideIn 2s;
 }
 </style>

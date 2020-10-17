@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="maxBox">
+    <div class="maxBox" ref="right_Box_Ref" id="right_box">
       <div class="topBar">
         <tap-bar />
       </div>
