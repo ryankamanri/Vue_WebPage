@@ -1,92 +1,83 @@
 <template>
-  <div>
-    <Song-lists :musicLists="songsList" />
-  </div>
+  <body>
+    <div class="topBox">
+      搜索<a>"{{ searchKey }}"</a>,共找到:{{ songsCount }}首单曲
+    </div>
+    <div class="list">
+      <Song-lists :musicLists="songsList" />
+    </div>
+    <div class="fenye" v-if="songsCount">
+      <Fenye :total="songsCount" :limit="limit" @pageChange="pageChange" />
+    </div>
+  </body>
 </template>
 
 <script>
 import SongLists from "components/search/songLists";
-import { getSearchList } from "network/children/search";
+import Fenye from "components/fenye/fenye";
 export default {
   data() {
     return {
+      songsCount: "",
       songsList: [],
+      searchKey: "",
+      limit: 30,
+      offset: 0,
     };
   },
   components: {
     SongLists,
+    Fenye,
   },
-  created() {
+  created() {},
+  mounted() {
+    this.searchKey = this.$route.params.id;
     this.getMusicList();
   },
   methods: {
-    getMusicList() {
-      const x = this.$route.params.id;
-      if (!x) return;
-      console.log(x);
-      getSearchList(x)
-        .then((res) => {
-          console.log(res);
-          // this.songsList = res.result.songs;
-        })
-        .catch((err) => console.log(err));
+    //获取歌曲列表
+    async getMusicList() {
+      this.songsList = [];
+      const res = await this.$http.get("/search", {
+        params: {
+          keywords: this.searchKey,
+          limit: this.limit,
+          offset: this.offset,
+          type: 1,
+        },
+      });
+      this.songsCount = res.data.result.songCount;
+      this.songsList = res.data.result.songs;
+      console.log(res.data.result.songs);
       console.log(res);
+    },
+    //监听页面改变
+    pageChange(page) {
+      this.offset = (page - 1) * this.limit;
+
+      this.getMusicList();
     },
   },
   watch: {
     $route: function (to, from) {
       this.getMusicList();
       console.log("发生了改变");
+      this.searchKey = this.$route.params.id;
+      this.getMusicList();
     },
   },
 };
 </script>
 
 <style lang='less' scoped>
-.bottomBox {
-  width: 100%;
-  float: left;
-  overflow: auto;
+body {
+  margin: 30px 30px;
 }
-
-.el-tabs /deep/ .el-tabs__nav {
-  margin-left: 70px;
-}
-.el-tabs /deep/ .el-tabs__active-bar {
-  background-color: #c62f2f;
-  height: 4px;
-}
-.el-tabs /deep/ .el-tabs__item.is-active {
-  color: #c62f2f;
-}
-.el-tabs /deep/ .el-tabs__nav-wrap::after {
-  height: 1px;
-  color: var(--color-line);
-}
-.el-tabs /deep/ .el-tabs__header {
-  margin: 0;
-}
-.title {
-  // margin-top: 4px;
-  height: 30px;
-  span {
-    display: inline-block;
-    width: 35px;
-    height: 18px;
-    border: 1px solid red;
-    color: red;
-    border-radius: 3px;
-    font-size: 12px;
-    text-align: center;
-    line-height: 18px;
-    margin-right: 14px;
-  }
-  h3 {
-    position: relative;
-    top: 4px;
-    display: inline-block;
-    font-size: 20px;
-    font-weight: 400;
+.topBox {
+  margin-bottom: 30px;
+  a {
+    color: blue;
+    font-size: 16px;
   }
 }
 </style>

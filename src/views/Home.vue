@@ -8,7 +8,7 @@
         <div class="leftBox"><left-menu></left-menu></div>
         <div class="rightBox test-1" ref="rightBoxRef" id="Right_box">
           <!-- <right-content /> -->
-          <transition :name="slideOut">
+          <transition :name="transitionName">
             <!-- <keep-alive exclude="bestNew,geXing,paiHang,singer,songList,zhuBo"> -->
             <router-view></router-view>
             <!-- </keep-alive> -->
@@ -16,6 +16,9 @@
         </div>
       </div>
       <div class="footerBox"><bottom-audio /></div>
+    </div>
+    <div class="left_Box" id="left_Box">
+      <Left-list />
     </div>
   </div>
 </template>
@@ -25,11 +28,12 @@ import leftMenu from "components/leftMenu";
 import rightContent from "views/find/index";
 import bottomAudio from "components/bottom/audio";
 
+import LeftList from "components/home/leftList";
 export default {
   name: "Home",
   data() {
     return {
-      slideOut: "",
+      transitionName: "",
     };
   },
   components: {
@@ -37,12 +41,33 @@ export default {
     leftMenu,
     rightContent,
     bottomAudio,
+    LeftList,
   },
   created() {
     // this.ifHasToken();
   },
   mounted() {
-    this.slideOut = "slide-com";
+    // this.slideOut = "slide-com";
+  },
+  watch: {
+    $route(to, from) {
+      if (from.meta.index == 0 && to.meta.index > from.meta.index) {
+        //设置动画名称
+        this.transitionName = "slide-left";
+        return;
+      }
+      if (to.meta.index == 0 && to.meta.index < from.meta.index) {
+        this.transitionName = "slide-right";
+      }
+      if (to.meta.index > 1 && to.meta.index > from.meta.index) {
+        //设置动画名称
+        this.transitionName = "slide-com";
+      }
+      if (to.meta.index > 1 && to.meta.index < from.meta.index) {
+        //设置动画名称
+        this.transitionName = "slide-back";
+      }
+    },
   },
   methods: {
     // ifHasToken() {
@@ -107,12 +132,13 @@ body {
 }
 
 .mainBox {
+  z-index: 999;
   background-color: rgba(255, 255, 255, 0.6);
 }
 .backgrand {
-  // background: url("~assets/images/download/壁纸3.jpg") no-repeat;
+  background: url("~assets/images/download/壁纸3.jpg") no-repeat;
 
-  background-color: rgb(255, 255, 255);
+  // background-color: rgb(255, 255, 255);
   background-size: 100% 100%;
   overflow: hidden;
   height: 100vh;
@@ -122,50 +148,14 @@ body {
   right: 0;
   top: 0;
 }
-
-/* 动画效果 */
-.slide-right-enter-active,
-.slide-right-leave-active,
-.slide-com-enter-active,
-.slide-com-leave-active,
-.slide-back-enter-active,
-.slide-back-leave-active,
-.slide-left-enter-active,
-.slide-left-leave-active {
-  will-change: transform;
-  transition: all 500ms;
+.left_Box {
   position: absolute;
-}
-.slide-right-enter {
-  opacity: 0;
-  transform: translate3d(-100%, 100%, 0);
-}
-.slide-right-leave-active {
-  opacity: 0;
-  transform: translate3d(-100%, 100%, 0);
-}
-.slide-left-enter {
-  opacity: 0;
-  transform: translate3d(-100%, 100%, 0);
-}
-.slide-left-leave-active {
-  opacity: 0;
-  transform: translate3d(-100%, 100%, 0);
-}
-.slide-com-enter {
-  opacity: 0;
-  transform: translate3d(0, -100%, 0);
-}
-.slide-com-leave-active {
-  opacity: 0;
-  transform: translate3d(0, 100%, 0);
-}
-.slide-back-enter {
-  opacity: 0;
-  transform: translate3d(0, 100%, 0);
-}
-.slide-back-leave-active {
-  opacity: 0;
-  transform: translate3d(0, -100%, 0);
+  left: 0;
+  top: 0;
+  width: 350px;
+  height: 950px;
+  background-color: #eee;
+  opacity: 0.3;
+  z-index: 1;
 }
 </style>

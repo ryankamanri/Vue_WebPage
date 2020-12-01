@@ -4,9 +4,11 @@
       <div class="topBar">
         <tap-bar />
       </div>
-      <!-- <keep-alive exclude="bestNew,geXing,paiHang,singer,songList,zhuBo"> -->
-      <router-view></router-view>
-      <!-- </keep-alive> -->
+      <transition :name="transitionName">
+        <!-- <keep-alive exclude="bestNew,geXing,paiHang,singer,songList,zhuBo"> -->
+        <router-view></router-view>
+        <!-- </keep-alive> -->
+      </transition>
     </div>
   </div>
 </template>
@@ -15,8 +17,26 @@
 import tapBar from "components/find/tapBar";
 
 export default {
+  data() {
+    return {
+      transitionName: "",
+    };
+  },
   components: {
     tapBar,
+  },
+  watch: {
+    //使用watch 监听$router的变化
+    $route(to, from) {
+      //如果to索引大于from索引,判断为前进状态,反之则为后退状态
+      if (to.meta.index > from.meta.index) {
+        //设置动画名称
+        this.transitionName = "slide-left";
+      }
+      if (to.meta.index < from.meta.index) {
+        this.transitionName = "slide-right";
+      }
+    },
   },
 };
 </script>

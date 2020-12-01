@@ -10,6 +10,8 @@ export default {
   },
   // 正在播放的音乐信息
   playMusicList(state, musicInfo) {
+    console.log(state.musicInfo);
+    console.log(musicInfo);
     state.musicInfo = musicInfo
   },
   // 播放音乐列表

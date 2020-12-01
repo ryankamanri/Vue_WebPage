@@ -5,7 +5,7 @@ import {
   Aside, Footer, Carousel, CarouselItem, Tabs, TabPane,
   Table, TableColumn, Slider, Avatar, Popover, Progress,
   MenuItemGroup, Dialog, Tooltip, Dropdown, DropdownItem,
-  DropdownMenu, ColorPicker,Pagination
+  DropdownMenu, ColorPicker,Pagination,Upload,Image,MessageBox
 } from 'element-ui'
 
 Vue.use(Input)
@@ -40,5 +40,8 @@ Vue.use(DropdownItem)
 Vue.use(DropdownMenu)
 Vue.use(ColorPicker)
 Vue.use(Pagination)
+Vue.use(Upload)
+Vue.use(Image)
 
 Vue.prototype.$message = Message
+Vue.prototype.$confirm = MessageBox.confirm

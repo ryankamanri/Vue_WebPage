@@ -6,7 +6,7 @@
     <!-- 推荐歌单 -->
     <div class="tuiJian">
       <h5>推荐歌单</h5>
-      <a href="#">更多></a>
+      <span class="cur" @click="routerPush">更多></span>
     </div>
     <div class="musicImgBox">
       <music-img :musiclists="musicList"></music-img>
@@ -46,6 +46,11 @@ export default {
     },
     //下拉加载更多
     getMore() {},
+    //路由跳转
+    routerPush() {
+      console.log("heh");
+      this.$router.push("/home/find/songList");
+    },
   },
   computed: {},
 };
@@ -66,9 +71,10 @@ export default {
     font-size: 18px;
     font-weight: 400;
   }
-  a {
+  span {
     float: right;
     position: relative;
+    font-size: 14px;
     top: 7px;
     right: 0;
     color: #000;

@@ -40,6 +40,7 @@
               </div>
             </div>
           </div>
+
           <div class="rightTop">
             <div class="contentBox">
               <div class="musicTitle nowp">
@@ -53,7 +54,6 @@
                 </h6>
                 <h6>
                   歌手:<a href="#">{{ musicInfo.name }}</a>
-                  <!--  .ar[0].name || musicInfo.al.name -->
                 </h6>
                 <h6>
                   来源:<a href="#">
@@ -62,6 +62,15 @@
                 </h6>
               </div>
               <div class="musicCi"></div>
+            </div>
+          </div>
+          <div class="rightCenter test-1">
+            <div
+              class="ciItem"
+              v-for="(item, index) in lrcObject"
+              :key="'ci' + index"
+            >
+              {{ item.c }}
             </div>
           </div>
         </div>
@@ -104,6 +113,10 @@ export default {
       commentsInfo: [],
       //相似音乐信息
       simiInfo: [],
+      //歌词信息
+      lyrics: [],
+      //歌词
+      lrcObject: [], //t 时间 c 歌词
     };
   },
   props: {
@@ -128,6 +141,8 @@ export default {
     this.getNowMusics();
     //获取音乐状态
     this.getMusicStates();
+    //获取歌词
+    this.getGeCi();
   },
   methods: {
     getNowMusics() {
@@ -185,6 +200,49 @@ export default {
       if (!rouRef) return;
       rouRef.style.transform = "rotateZ(" + this.routeNum + "deg)";
       this.routeNum += 1;
+    },
+    //获取歌词
+    async getGeCi() {
+      const res = await this.$http.get("lyric", {
+        params: { id: this.musicInfo.id },
+      });
+      this.lyrics = res.data.lrc.lyric;
+      this.changeGeCi(this.lyrics);
+      console.log(res.data);
+    },
+    //解析歌词
+    changeGeCi(lrc) {
+      var oLRC = {
+        ms: [], //歌词数组{t:时间,c:歌词}
+      };
+      let lrcs = lrc.split("\n");
+      for (var i in lrcs) {
+        //遍历歌词数组
+        lrcs[i] = lrcs[i].replace(/(^\s*)|(\s*$)/g, ""); //去除前后空格  *表示可以不出现或者出现任意次 \s表示空格 ^表示开头 $表示结尾 /g表示匹配多个结果
+        var arr = lrcs[i].match(/\[(\d+:.+?)\]/g); //提取时间字段，可能有多个
+        var start = 0;
+        for (var k in arr) {
+          start = arr[k].length; //计算歌词位置 长度叠加
+        }
+        var content = lrcs[i].substring(start); //获取歌词内容 相当于减去时间字符串的长度剩下的就是内容
+        for (var k in arr) {
+          var t = arr[k].substring(1, arr[k].length - 1); //取[]间的内容
+          // var t = arr[k]
+          var s = t.split(":"); //分离:前后文字 便于计算成毫秒数
+          oLRC.ms.push({
+            //对象{t:时间,c:歌词}加入ms数组
+            // t: t,
+            t: (parseFloat(s[0]) * 60 + parseFloat(s[1])).toFixed(3), //parseFloat 以数字返回该数字
+            c: content === "" ? ".............." : content,
+          });
+        }
+      }
+      oLRC.ms.sort(function (a, b) {
+        //按时间顺序排序
+        return a.t - b.t;
+      });
+      console.log(oLRC.ms);
+      return (this.lrcObject = oLRC.ms);
     },
   },
   computed: {
@@ -251,7 +309,7 @@ export default {
   }
 }
 .leftTop {
-  display: inline-block;
+  float: left;
   height: 100%;
   width: 440px;
   // background-color: #fff;
@@ -302,9 +360,10 @@ export default {
 .rightTop {
   float: right;
   width: 428px;
-  height: 100%;
+  height: 20%;
   // background-color: skyblue;
 }
+
 .contentBox {
   width: 100%;
   height: 30px;
@@ -334,6 +393,14 @@ export default {
       font-size: 12px;
     }
   }
+}
+.rightCenter {
+  float: right;
+  width: 428px;
+  height: 80%;
+  overflow: auto;
+  line-height: 29px;
+  font-size: 14px;
 }
 .bottomBox {
   margin-top: 20px;

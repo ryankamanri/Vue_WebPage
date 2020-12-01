@@ -74,12 +74,14 @@ const routes = [{
     path: '/home',
     redirect: '/home/find/geXing',
     component: Home,
+    meta:{index:10},
     children: [{
         path: '/',
         redirect: 'home'
       }, {
         path: 'find',
         component: find,
+        meta:{index:10},
         meta: {
           keepAlive: false //true是保存缓存，false是不保存
         },
@@ -89,92 +91,116 @@ const routes = [{
         }, {
           path: 'geXing',
           name: 'gexing',
-          component: geXing,
+            component: geXing,
+            meta:{index:10},
           meta: {
 
             keepAlive: false //true是保存缓存，false是不保存
 
           }
-        }, {
-          path: 'bestNew',
-          name: 'bestNew',
-          component: bestNew
+        },{
+          path: 'songList',
+            name: 'songList',
+            meta:{index:11},
+          component: songList
+        },  {
+          path: 'zhuBo',
+            name: 'zhuBo',
+            meta:{index:12},
+          component: zhuBo
         }, {
           path: 'paiHang',
-          name: 'paiHang',
+            name: 'paiHang',
+            meta:{index:13},
           component: paiHang
         }, {
           path: 'singer',
-          name: 'singer',
+            name: 'singer',
+            meta:{index:14},
           component: singer
         }, {
-          path: 'songList',
-          name: 'songList',
-          component: songList
-        }, {
-          path: 'zhuBo',
-          name: 'zhuBo',
-          component: zhuBo
+          path: 'bestNew',
+            name: 'bestNew',
+            meta:{index:15},
+          component: bestNew
         }]
       }, {
+        path: 'myRadio',
+        meta:{index:11},
+        component: MyRadio
+      }, {
         path: 'live',
+        meta:{index:12},
         component: Live
       }, {
         path: 'video',
         component: Video,
+        meta:{index:13},
         children: [{
           path: '/',
           redirect:'videos'
         },
+        {
+          path: 'videos',
+          meta:{index:13},
+          component:videos
+        },
           {
             path: 'mvs',
+            meta:{index:14},
             component:mvs
-          },
-          {
-            path: 'videos',
-            component:videos
           },
         ]
       }, {
         path: 'friends',
+        meta:{index:15},
         component: Friends
       }, {
-        path: 'myRadio',
-        component: MyRadio
+        path: 'localMusic',
+        meta:{index:16},
+        component: localMusic
+      }, {
+        path: 'download',
+        meta:{index:17},
+        component: download
       },
-      {
-        path: 'listDetail:id',
-        component: listDetail 
-      },
-      
       {
         path: 'cloudPan',
+        meta:{index:18},
         component: cloudPan
       }, {
         path: 'dianTai',
+        meta:{index:19},
         component: dianTai
       }, {
-        path: 'download',
-        component: download
-      }, {
-        path: 'localMusic',
-        component: localMusic
-      }, {
         path: 'shouCang',
+        meta:{index:20},
         component: shouCang,
       }, {
         path: 'playing',
+        meta:{index:0},
         component: playing,
       }, {
         path: 'singer:id',
+        meta:{index:2},
         component: singerDetail 
       },{
         path: 'videoing:id',
+        meta:{index:2},
         component: videoing
       }, {
         path: 'mving:id',
+        meta:{index:2},
         component: mving
-      }
+      }, {
+        path: 'search:id',
+        meta:{index:2},
+        component: searchList
+      }, {
+        path: 'listDetail:id',
+        meta:{index:2},
+        component: listDetail 
+      },
     ]
   },
 
@@ -189,7 +215,9 @@ const routes = [{
 //   next()
 // })
 const router = new VueRouter({
-  routes
+  mode:"history",
+  routes,
+  
 })
 
 export default router

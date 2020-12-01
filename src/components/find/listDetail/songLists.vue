@@ -21,11 +21,26 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="name" label="音乐标题" width="333px">
+      <el-table-column
+        prop="name"
+        :show-overflow-tooltip="true"
+        label="音乐标题"
+        width="333px"
+      >
       </el-table-column>
-      <el-table-column prop="ar[0].name" label="歌手" width="236px">
+      <el-table-column
+        prop="ar[0].name"
+        :show-overflow-tooltip="true"
+        label="歌手"
+        width="236px"
+      >
       </el-table-column>
-      <el-table-column prop="al.name" label="专辑" width="214px">
+      <el-table-column
+        prop="al.name"
+        :show-overflow-tooltip="true"
+        label="专辑"
+        width="214px"
+      >
       </el-table-column>
       <el-table-column prop="dt" label="时长"> </el-table-column>
     </el-table>

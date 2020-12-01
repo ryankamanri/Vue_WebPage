@@ -56,17 +56,6 @@
             <span slot="title">朋友</span>
           </el-menu-item>
         </el-menu>
-        <!--      <div class="yuLan">
-          <div class="yuLanLi">
-            <div class="imgBox">
-              <img :src="musicInfo.artists[0] || musicInfo.al" alt="" />
-            </div>
-            <div class="textBox">
-              <h5>{{ musicInfo.name }}</h5>
-              <h5>正在播放:</h5>
-            </div>
-          </div>
-        </div -->
       </el-col>
       <el-col>
         <h3 class="tuiJian">我的音乐</h3>
@@ -125,7 +114,11 @@
         <div class="yuLan">
           <div class="yuLanLi">
             <div class="imgBox">
-              <img class="imgBoxImg" :src="musicInfo.al.picUrl" alt="" />
+              <img
+                class="imgBoxImg"
+                :src="musicInfo.al ? musicInfo.al.picUrl : picUrl"
+                alt=""
+              />
             </div>
             <div class="bgImgBox" @click="pushPlaying()">
               <img src="~assets/images/playMusic/展开.png" alt="" />
@@ -178,14 +171,10 @@
       </el-col>
     </el-row>
     <el-row class="tac"> </el-row>
-    <!-- <div class="playing">
-      <Playing :playNone="ifShow" />
-    </div> -->
   </el-container>
 </template>
 
 <script>
-// import { getNowMusic } from "store/index";
 import { mapGetters } from "vuex";
 
 import Playing from "components/playing/playing";
@@ -196,20 +185,11 @@ export default {
       //当前活跃的路径
       activePath: "/home/find/geXing",
       isCollapse: false,
+      picUrl:
+        "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1602913790436&di=a25e050830809e72bd4ee8a134474b11&imgtype=0&src=http%3A%2F%2Fku.90sjimg.com%2Felement_origin_min_pic%2F18%2F07%2F10%2F3e4575f9df9afb8c4d49883b2f5cfce6.jpg",
       //音乐信息
       musicInfo: {
         name: "网易云音乐",
-        /*     al: {
-          picUrl:
-            // "https://p2.music.126.net/NhkuFBphLFaSmYMeW1-frQ==/109951164271814514.jpg",
-            "",
-        }, */
-        artists: [
-          {
-            picUrl:
-              "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1602913790436&di=a25e050830809e72bd4ee8a134474b11&imgtype=0&src=http%3A%2F%2Fku.90sjimg.com%2Felement_origin_min_pic%2F18%2F07%2F10%2F3e4575f9df9afb8c4d49883b2f5cfce6.jpg",
-          },
-        ],
         al: {
           picUrl:
             "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1602913790436&di=a25e050830809e72bd4ee8a134474b11&imgtype=0&src=http%3A%2F%2Fku.90sjimg.com%2Felement_origin_min_pic%2F18%2F07%2F10%2F3e4575f9df9afb8c4d49883b2f5cfce6.jpg",
@@ -238,9 +218,6 @@ export default {
     Playing,
   },
   created() {
-    //检测
-    this.jianCe(this.musicInfo);
-    console.log(this.musicInfo);
     //获取菜单路径
     this.getMenu();
     //获取活跃路径
@@ -283,41 +260,19 @@ export default {
     pushPlaying() {
       console.log(this.$store.state);
       if (!this.$store.state.musicurl) {
-        return;
+        return this.$message.error("正在播放的歌曲没有要展示的内容！");
       }
       this.$router.push("/home/playing");
       // this.ifShow.isShow = true;
     },
-    //检测
-    jianCe(info) {
-      if (info.al === undefined) {
-        info = {
-          al: {
-            picUrl:
-              "http://p4.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
-            name: "歌名",
-            pic: 0,
-            id: 0,
-          },
-          ar: [
-            {
-              id: 0,
-              name: "歌手",
-            },
-          ],
-          dt: 0,
-        };
-        console.log(info);
-      }
-    },
   },
 
-  ifNameUndefined() {
-    return this.musicInfo.name === undefined ? "11" : "222";
-  },
   watch: {
     getNowMusic(info) {
-      this.jianCe(info);
+      if (info === undefined) {
+        info.al[0].picUrl =
+          "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1602913790436&di=a25e050830809e72bd4ee8a134474b11&imgtype=0&src=http%3A%2F%2Fku.90sjimg.com%2Felement_origin_min_pic%2F18%2F07%2F10%2F3e4575f9df9afb8c4d49883b2f5cfce6.jpg";
+      }
       this.musicInfo = info;
 
       console.log(info);
