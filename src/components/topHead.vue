@@ -147,7 +147,7 @@ export default {
 <style   scoped>
 .box {
   position: relative;
-  background-color: #c62f2f;
+  background-color: rgb(236,65,65);
   height: 50px;
 }
 .logo {

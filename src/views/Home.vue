@@ -94,7 +94,7 @@ body {
 }
 .mainBox {
   width: 1200px !important;
-  height: 950px;
+  height: 750px;
   // overflow: hidden;
   margin: 0 auto;
   // background-color: #f5f5f7;
@@ -104,22 +104,22 @@ body {
   height: 50px;
 }
 .centerBox {
-  height: 850px;
+  height: 650px;
   width: 1200px;
   // overflow: hidden;
 }
 .leftBox {
   float: left;
   width: 200px;
-  height: 850px;
+  height: 650px;
   overflow: hidden;
 }
 .rightBox {
   float: left;
   width: 1000px;
-  height: 850px;
+  height: 650px;
   // background-color: #fff;
-  max-height: 850px;
+  max-height: 650px;
   overflow: auto;
   transition: all 3s;
   // overflow: hidden;
