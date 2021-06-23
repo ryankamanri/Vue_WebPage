@@ -17,9 +17,9 @@
       </div>
       <div class="footerBox"><bottom-audio /></div>
     </div>
-    <div class="left_Box" id="left_Box">
+    <!-- <div class="left_Box" id="left_Box">
       <Left-list />
-    </div>
+    </div> -->
   </div>
 </template>
 <script>
@@ -136,9 +136,9 @@ body {
   background-color: rgba(255, 255, 255, 0.6);
 }
 .backgrand {
-  background: url("~assets/images/download/壁纸3.jpg") no-repeat;
+  //background: url("~assets/images/download/壁纸3.jpg") no-repeat;
 
-  // background-color: rgb(255, 255, 255);
+  background-color: rgb(255, 255, 255);
   background-size: 100% 100%;
   overflow: hidden;
   height: 100vh;

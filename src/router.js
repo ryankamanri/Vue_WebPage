@@ -62,7 +62,6 @@ VueRouter.prototype.push = function push(location) {
 }
 
 
-
 const routes = [{
     path: '/',
     name: 'Login',
@@ -74,14 +73,18 @@ const routes = [{
     path: '/home',
     redirect: '/home/find/geXing',
     component: Home,
-    meta:{index:10},
+    meta: {
+      index: 10
+    },
     children: [{
         path: '/',
         redirect: 'home'
       }, {
         path: 'find',
         component: find,
-        meta:{index:10},
+        meta: {
+          index: 10
+        },
         meta: {
           keepAlive: false //true是保存缓存，false是不保存
         },
@@ -91,115 +94,161 @@ const routes = [{
         }, {
           path: 'geXing',
           name: 'gexing',
-            component: geXing,
-            meta:{index:10},
+          component: geXing,
+          meta: {
+            index: 10
+          },
           meta: {
 
             keepAlive: false //true是保存缓存，false是不保存
 
           }
-        },{
+        }, {
           path: 'songList',
-            name: 'songList',
-            meta:{index:11},
+          name: 'songList',
+          meta: {
+            index: 11
+          },
           component: songList
-        },  {
+        }, {
           path: 'zhuBo',
-            name: 'zhuBo',
-            meta:{index:12},
+          name: 'zhuBo',
+          meta: {
+            index: 12
+          },
           component: zhuBo
         }, {
           path: 'paiHang',
-            name: 'paiHang',
-            meta:{index:13},
+          name: 'paiHang',
+          meta: {
+            index: 13
+          },
           component: paiHang
         }, {
           path: 'singer',
-            name: 'singer',
-            meta:{index:14},
+          name: 'singer',
+          meta: {
+            index: 14
+          },
           component: singer
         }, {
           path: 'bestNew',
-            name: 'bestNew',
-            meta:{index:15},
+          name: 'bestNew',
+          meta: {
+            index: 15
+          },
           component: bestNew
         }]
       }, {
         path: 'myRadio',
-        meta:{index:11},
+        meta: {
+          index: 11
+        },
         component: MyRadio
       }, {
         path: 'live',
-        meta:{index:12},
+        meta: {
+          index: 12
+        },
         component: Live
       }, {
         path: 'video',
         component: Video,
-        meta:{index:13},
+        meta: {
+          index: 13
+        },
         children: [{
-          path: '/',
-          redirect:'videos'
-        },
-        {
-          path: 'videos',
-          meta:{index:13},
-          component:videos
-        },
+            path: '/',
+            redirect: 'videos'
+          },
+          {
+            path: 'videos',
+            meta: {
+              index: 13
+            },
+            component: videos
+          },
           {
             path: 'mvs',
-            meta:{index:14},
-            component:mvs
+            meta: {
+              index: 14
+            },
+            component: mvs
           },
         ]
       }, {
         path: 'friends',
-        meta:{index:15},
+        meta: {
+          index: 15
+        },
         component: Friends
       }, {
         path: 'localMusic',
-        meta:{index:16},
+        meta: {
+          index: 16
+        },
         component: localMusic
       }, {
         path: 'download',
-        meta:{index:17},
+        meta: {
+          index: 17
+        },
         component: download
       },
       {
         path: 'cloudPan',
-        meta:{index:18},
+        meta: {
+          index: 18
+        },
         component: cloudPan
       }, {
         path: 'dianTai',
-        meta:{index:19},
+        meta: {
+          index: 19
+        },
         component: dianTai
       }, {
         path: 'shouCang',
-        meta:{index:20},
+        meta: {
+          index: 20
+        },
         component: shouCang,
       }, {
         path: 'playing',
-        meta:{index:0},
+        meta: {
+          index: 0
+        },
         component: playing,
       }, {
         path: 'singer:id',
-        meta:{index:2},
-        component: singerDetail 
-      },{
+        meta: {
+          index: 2
+        },
+        component: singerDetail
+      }, {
         path: 'videoing:id',
-        meta:{index:2},
+        meta: {
+          index: 2
+        },
         component: videoing
       }, {
         path: 'mving:id',
-        meta:{index:2},
+        meta: {
+          index: 2
+        },
         component: mving
       }, {
         path: 'search:id',
-        meta:{index:2},
+        meta: {
+          index: 2
+        },
         component: searchList
       }, {
         path: 'listDetail:id',
-        meta:{index:2},
-        component: listDetail 
+        meta: {
+          index: 2
+        },
+        component: listDetail
       },
     ]
   },
