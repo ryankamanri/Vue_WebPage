@@ -1,6 +1,7 @@
 /* 路径简写 */
 module.exports = {
   configureWebpack: {
+    devtool:'source-map',
     resolve: {
       extensions: [],
       alias: {
