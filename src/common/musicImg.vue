@@ -46,7 +46,7 @@ export default {
       //加载中
       this.loadingInstance = Loading.service({
         target: ".mainBox", // DOM 节点
-        text: "QAQ加载中，主人请稍后",
+        text: "载入中...",
         background: "rgba(0,0, 0, 0.1)",
       });
       //生成随机数
@@ -117,7 +117,7 @@ export default {
 .eachBox {
   position: relative;
   width: 173px;
-  height: 215px;
+  height: 220px;
   margin-right: 15px;
   margin-bottom: 35px;
   float: left;
@@ -140,7 +140,7 @@ export default {
 }
 .textBox {
   width: 175px;
-  height: 31px;
+  height: 36px;
   font-size: 13px;
   display: -webkit-box;
   -webkit-box-orient: vertical;

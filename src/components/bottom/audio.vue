@@ -307,7 +307,6 @@ export default {
   img {
     position: relative;
     left: 1px;
-    top: 2px;
     width: 17px;
     height: 17px;
   }

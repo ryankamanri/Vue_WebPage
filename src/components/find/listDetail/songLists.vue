@@ -7,7 +7,11 @@
       stripe
       :row-class-name="tableRowClassName"
     >
-      <el-table-column type="index" label=" " width="50px"> </el-table-column>
+      <el-table-column type="index" label=" " width="50px"> 
+        <template slot-scope="scope">
+          <div v-show="!ifPlaying(scope.row)">{{scope.row.index+1}}</div>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" width="60px">
         <template slot-scope="scope">
           <div class="caoZuoBtn">
@@ -17,7 +21,7 @@
             />
           </div>
           <div class="playing" v-if="ifPlaying(scope.row)">
-            <img src="~assets/images/geXing/心-熊.png" alt="喜欢" />
+            <img src="~assets/images/geXing/音量.png" alt="喜欢" />
           </div>
         </template>
       </el-table-column>
@@ -145,6 +149,7 @@ export default {
     ifPlaying(row) {
       // return this.$store.state.musicInfo.index===this.row
       if (!row) return;
+      console.log(row);
       return row.index === this.$store.state.musicInfo.index;
     },
     //下拉懒加载

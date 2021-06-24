@@ -246,7 +246,7 @@ export default {
   width: 10px;
   height: 8px;
   border-radius: 10%;
-  background-color: #c62f2f;
+  background-color: rgb(236,65,65);
   border: 1px solid #edbdbd;
   margin: 0 20px;
 }
